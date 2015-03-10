@@ -1,0 +1,7 @@
+[[application]]
+name = "Fast Awesome API"
+path = "."
+
+  [application.build]
+  builder = "Dockerfile"
+  repo = "quay.io/reevoo/fast_awesome_api"
