@@ -28,8 +28,8 @@ lang    - run docker build
 builder - push
 
 
-keep git repos in the repo cache
-do a clone from the cache & merge the correct branch
-symlink node_modules and bower_components
-do npm install and bower install
+keep git repos in the repo cache  
+do a clone from the cache & merge the correct branch  
+symlink node_modules and bower_components  
+do npm install and bower install  
 grunt build
