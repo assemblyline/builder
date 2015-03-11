@@ -23,7 +23,7 @@ class GitCache
 
   def clone
     FileUtils.mkdir_p git_url.cache_path
-    system "git clone --mirror #{git_url.url} #{git_url.cache_path}"
+    system "git clone #{git_url.url} #{git_url.cache_path}"
   end
 
   def fetch

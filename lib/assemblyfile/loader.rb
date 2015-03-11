@@ -12,12 +12,11 @@ module Assemblyfile
       self.builder = load_builder(data['build'])
     end
 
-    attr_reader :builder, :path
+    attr_reader :builder, :path, :name
 
     protected
 
-    attr_writer :builder, :path
-    attr_accessor :name
+    attr_writer :builder, :path, :name
 
     private
 

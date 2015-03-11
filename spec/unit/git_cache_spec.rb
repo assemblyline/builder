@@ -7,7 +7,7 @@ describe GitCache do
   it 'creates the cache if it does not exist' do
     allow(Dir).to receive(:exist?).with('foo')
     expect(FileUtils).to receive(:mkdir_p).with('foo')
-    expect(subject).to receive(:system).with('git clone --mirror foo-url foo')
+    expect(subject).to receive(:system).with('git clone foo-url foo')
     subject.refresh
   end
 

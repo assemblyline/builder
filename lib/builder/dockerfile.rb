@@ -8,9 +8,7 @@ class Builder
     end
 
     def build
-      puts 'this should do something'
-      binding.pry
-      d = Docker::Image.build_from_dir(application.path)
+      system "docker build #{application.path}"
     end
 
     protected
