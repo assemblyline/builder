@@ -4,18 +4,15 @@ require 'tmpdir'
 require 'assemblyfile/loader'
 
 class Builder
-  def initialize(url:, branch: nil)
+  def initialize(url:)
     @url = GitUrl.new url
     @path = path
     @branch = branch
   end
 
   def build
-    GitCache.refresh url
     Dir.mktmpdir do |dir|
-      system "cp -rp #{url.cache_path}/* #{dir}"
-      Dir.chdir dir
-      system "git merge #{branch}" if branch
+      cache.make_working_copy(dir)
       Assemblyfile.load(dir).each do |application|
         application.builder.build
       end
@@ -24,6 +21,10 @@ class Builder
   end
 
   private
+
+  def cache
+    GitCache.new(url)
+  end
 
   attr_reader :url, :path, :branch
 

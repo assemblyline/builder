@@ -17,6 +17,11 @@ class GitCache
     end
   end
 
+  def make_working_copy(dir)
+    refresh
+    system "cp -rp #{git_url.cache_path}/* #{dir}"
+  end
+
   private
 
   attr_reader :git_url
