@@ -11,10 +11,10 @@ class Builder
   end
 
   def build
-    Dir.mktmpdir do |dir|
-      cache.make_working_copy(dir)
+    cache.make_working_copy do |dir|
       Assemblyfile.load(dir).each do |application|
-        application.builder.build
+        application.build
+        application.push
       end
       # Submit Docker Tag to shipping agent and push image
     end

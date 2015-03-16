@@ -12,6 +12,10 @@ class GitUrl
 
   attr_reader :url
 
+  def repo
+    parts['repo']
+  end
+
   private
 
   def validate!
@@ -30,9 +34,6 @@ class GitUrl
     parts['org']
   end
 
-  def repo
-    parts['repo']
-  end
 
   def parts
     temp = nil

@@ -17,9 +17,12 @@ class GitCache
     end
   end
 
-  def make_working_copy(dir)
-    refresh
-    system "cp -rp #{git_url.cache_path}/* #{dir}"
+  def make_working_copy
+    Dir.mktmpdir do |dir|
+      refresh
+      system "cp -rp #{git_url.cache_path} #{dir}"
+      yield "#{dir}/#{git_url.repo}"
+    end
   end
 
   private
