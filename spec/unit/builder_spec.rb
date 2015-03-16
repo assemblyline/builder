@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'builder'
 require 'builder/dockerfile'
 
@@ -16,6 +17,7 @@ describe Builder do
     app = double
     expect(Assemblyfile).to receive(:load).with('/tmp/foo-bah').and_return([app])
     expect(app).to receive(:build)
+    expect(app).to receive(:push)
     subject.build
   end
 end

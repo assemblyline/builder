@@ -1,4 +1,6 @@
 require 'fileutils'
+require 'git_repo'
+require 'tmpdir'
 
 class GitCache
   def self.refresh(git_url)
@@ -31,11 +33,10 @@ class GitCache
 
   def clone
     FileUtils.mkdir_p git_url.cache_path
-    system "git clone #{git_url.url} #{git_url.cache_path}"
+    GitRepo.clone git_url.url, git_url.cache_path
   end
 
   def fetch
-    Dir.chdir git_url.cache_path
-    system 'git fetch'
+    GitRepo.new(git_url.cache_path).pull
   end
 end

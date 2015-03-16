@@ -1,4 +1,5 @@
 require 'docker'
+require 'git_repo'
 
 class Builder
   class Dockerfile
@@ -23,11 +24,11 @@ class Builder
     private
 
     def tag
-      @_tag ||= `git --git-dir=#{git_dir} rev-parse --short HEAD`.chomp + '_' + Time.now.strftime('%Y%m%d%H%M%S')
+      @_tag ||= sha + '_' + Time.now.strftime('%Y%m%d%H%M%S')
     end
 
-    def git_dir
-      File.join(application.path, '.git')
+    def sha
+      GitRepo.new(application.path).sha
     end
 
     def auth_docker

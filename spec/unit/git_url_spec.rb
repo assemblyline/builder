@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'git_url'
 
 describe GitUrl do
