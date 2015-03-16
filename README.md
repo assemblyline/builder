@@ -5,7 +5,6 @@
 * navigate to the correct path
 * build the docker image
 * push it
-* clean up
 
 ### JS
 
