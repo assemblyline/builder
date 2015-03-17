@@ -2,17 +2,12 @@ require 'spec_helper'
 require 'builder/dockerfile'
 
 describe Builder::Dockerfile do
-  let(:application) { double(:application, path: Dir.pwd) }
-  let(:git_sha) { `git rev-parse --short HEAD`.chomp }
-  subject { described_class.new(application: application, build: { 'repo' => 'quay.io/foo/bar-baz' } ) }
+  let(:application) { double(:application, path: '/foo/bar', tag: 'foo.com/foo/bar') }
+  subject { described_class.new(application: application, build: {}) }
 
   describe 'doing the docker build' do
-    before do
-      allow(Time).to receive(:now).and_return(Time.at(1426533532))
-    end
-
-    it 'shells out to the docker client' do
-      expect(subject).to receive(:system).with("docker build -t quay.io/foo/bar-baz:#{git_sha}_20150316191852 #{Dir.pwd}")
+    it 'shells out to the docker client with the correct args' do
+      expect(subject).to receive(:system).with("docker build -t foo.com/foo/bar /foo/bar")
       subject.build
     end
   end

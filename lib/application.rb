@@ -3,6 +3,7 @@ class Application
     self.name = data['name']
     self.path = File.expand_path(File.join(dir, data['path']))
     self.builder = load_builder(data['build'])
+    self.repo = data['repo']
   end
 
   attr_reader :builder, :path, :name
@@ -12,14 +13,36 @@ class Application
   end
 
   def push
-    builder.push
+    auth_docker
+    Docker::Image.get(tag).push { |s| puts JSON.parse(s)['status'] }
+  end
+
+  def tag
+    @_tag ||= "#{repo}:#{sha}_#{timestamp}"
   end
 
   protected
 
   attr_writer :builder, :path, :name
+  attr_accessor :repo
 
   private
+
+  def auth_docker
+    Docker.authenticate!(
+      'username' => ENV['DOCKER_USERNAME'],
+      'password' => ENV['DOCKER_PASSWORD'],
+      'serveraddress' => ENV['DOCKER_REPO_ADDR']
+    )
+  end
+
+  def timestamp
+    Time.now.strftime('%Y%m%d%H%M%S')
+  end
+
+  def sha
+    GitRepo.new(path).sha
+  end
 
   def load_builder(build)
     name = build['builder']
