@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+# Work out ruby version
+# Work out the tag
+# Build dockerfile
+# Docker build
+# Run the tests
+# puts tag

@@ -3,10 +3,6 @@ require 'git_repo'
 require 'tmpdir'
 
 class GitCache
-  def self.refresh(git_url)
-    new(git_url).refresh
-  end
-
   def initialize(git_url)
     @git_url = git_url
   end

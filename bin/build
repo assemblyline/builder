@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+# Get the code
+# Work out what builder to use
+# run the builder

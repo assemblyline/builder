@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# workout the tag
+# copy stuff to the build container
+# run dep installs
+# run build scripts
+# workout build tag
+# copy dist to webserver container
+# output tag

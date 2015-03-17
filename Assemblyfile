@@ -1,0 +1,4 @@
+[[application]]
+name = "Client Portal Backend"
+path = "backend"
+builder = "dockerfile"
