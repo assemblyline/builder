@@ -24,12 +24,12 @@ describe Application do
 
   describe '#tag' do
     let!(:git_sha) do
-      MiniGit.init dir
+      MiniGit::Capturing.init dir
       FileUtils.touch("#{dir}/file.txt")
-      git = MiniGit.new(dir)
+      git = MiniGit::Capturing.new(dir)
       git.add '.'
       git.commit m: 'test commit'
-      git.capturing.rev_parse({short: true}, :HEAD).chomp
+      git.rev_parse({short: true}, :HEAD).chomp
     end
 
     it 'constructs the correct tag' do
