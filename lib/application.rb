@@ -1,3 +1,5 @@
+require 'json'
+
 class Application
   def initialize(data, dir)
     self.name = data['name']
@@ -32,11 +34,30 @@ class Application
   private
 
   def auth_docker
-    Docker.authenticate!(
-      'username' => ENV['DOCKER_USERNAME'],
-      'password' => ENV['DOCKER_PASSWORD'],
-      'serveraddress' => ENV['DOCKER_REPO_ADDR']
-    )
+    dockercfg.each do |index, config|
+      Docker.authenticate!(
+        'email' => config['email'],
+        'username' => username(config['auth']),
+        'password' => password(config['auth']),
+        'serveraddress' => index
+      )
+    end
+  end
+
+  def username(auth)
+    decode(auth).first
+  end
+
+  def password(auth)
+    decode(auth).last
+  end
+
+  def decode(auth)
+    Base64.decode64(auth).split(':')
+  end
+
+  def dockercfg
+    JSON.parse(ENV['DOCKERCFG'])
   end
 
   def timestamp
