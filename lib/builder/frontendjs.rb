@@ -61,15 +61,15 @@ class Builder
     end
 
     def create_container
-      Docker::Container.create('Cmd' => command, 'Image' => 'foo-bah', 'Volumes' => { '/tmp' => {} }, 'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}"])
+      Docker::Container.create('Cmd' => command, 'Image' => 'quay.io/assemblyline/builder-frontendjs', 'Volumes' => { '/tmp' => {} }, 'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}"])
     end
 
     def command
-      ["bash", "-c", "cd #{application.path} && " + script.join(" && ")]
+      ["bash", "-c", script.join(" && ")]
     end
 
     def script
-      @script || npm + bower + grunt
+      ["cd #{application.path}"] + (@script || npm + bower + grunt)
     end
 
     def grunt

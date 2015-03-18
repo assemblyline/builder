@@ -1,0 +1,8 @@
+[[application]]
+
+name = "Fast Awesome Web Client"
+path = "."
+repo = "quay.io/reevoo/fast_awesome_web"
+
+  [application.build]
+  builder = "FronendJS"
