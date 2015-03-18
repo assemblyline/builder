@@ -13,6 +13,7 @@ describe Builder::FrontendJS do
   let(:container) { double(:container, start: nil, attach: nil, json: container_json, delete: nil) }
 
   before do
+    allow(Docker::Image).to receive(:create)
     allow(Docker::Container).to receive(:create).and_return(container)
   end
 

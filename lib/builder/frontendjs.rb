@@ -61,6 +61,7 @@ class Builder
     end
 
     def create_container
+      Docker::Image.create('fromImage' => 'quay.io/assemblyline/builder-frontendjs')
       Docker::Container.create('Cmd' => command, 'Image' => 'quay.io/assemblyline/builder-frontendjs', 'Volumes' => { '/tmp' => {} }, 'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}"])
     end
 
