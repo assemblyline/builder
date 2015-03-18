@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
-# Get the code
-# Work out what builder to use
-# run the builder
+require 'pathname'
+$LOAD_PATH.unshift File.expand_path('../../lib', Pathname.new(__FILE__).realpath)
+
+require 'builder'
+
+Builder.new(url: ARGV[0]).build
+
