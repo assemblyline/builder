@@ -64,8 +64,12 @@ describe Application do
   describe '#push' do
     let(:image) { double }
 
+    before do
+      ENV['DOCKERCFG'] = "{\"https://index.docker.io/v1/\":{\"auth\":\"ZXJybTpwYXNzd29yZA\",\"email\":\"ed@reevoo.com\"}}"
+    end
+
     it 'pushes the tagged image to the repo' do
-      expect(Docker).to receive(:authenticate!)
+      expect(Docker).to receive(:authenticate!).with("email"=>"ed@reevoo.com", "username"=>"errm", "password"=>"password", "serveraddress"=>"https://index.docker.io/v1/")
       allow(subject).to receive(:full_tag).and_return('awesome_tag')
       allow(Docker::Image).to receive(:get).with('awesome_tag').and_return(image)
       expect(image).to receive(:push)
