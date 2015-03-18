@@ -22,7 +22,7 @@ describe GitRepo do
 
   describe '.clone' do
     it 'calls the MiniGit clone method' do
-      expect(MiniGit).to receive(:clone).with('f0000','B4arr')
+      expect(MiniGit).to receive(:git).with(:clone, 'f0000','B4arr')
       described_class.clone 'f0000', 'B4arr'
     end
   end

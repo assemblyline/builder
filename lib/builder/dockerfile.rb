@@ -8,7 +8,7 @@ class Builder
     end
 
     def build
-      system "docker build -t #{application.tag} #{application.path}"
+      system "docker build -t #{application.full_tag} #{application.path}"
     end
 
     protected

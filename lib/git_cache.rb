@@ -8,7 +8,7 @@ class GitCache
   end
 
   def refresh
-    if Dir.exist? git_url.cache_path
+    if Dir.exist? File.join(git_url.cache_path, '.git')
       fetch
     else
       clone
@@ -29,7 +29,7 @@ class GitCache
 
   def clone
     FileUtils.mkdir_p git_url.cache_path
-    GitRepo.clone git_url.url, git_url.cache_path
+    GitRepo.clone(git_url.url, git_url.cache_path)
   end
 
   def fetch

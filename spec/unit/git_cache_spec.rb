@@ -7,14 +7,14 @@ describe GitCache do
 
   describe '#refresh' do
     it 'creates the cache if it does not exist' do
-      allow(Dir).to receive(:exist?).with('cache/github.com/bar/foo')
+      allow(Dir).to receive(:exist?).with('cache/github.com/bar/foo/.git')
       expect(FileUtils).to receive(:mkdir_p).with('cache/github.com/bar/foo')
       expect(GitRepo).to receive(:clone).with('foo-url', 'cache/github.com/bar/foo')
       subject.refresh
     end
 
     it 'fetches the cache if it does exist' do
-      allow(Dir).to receive(:exist?).with('cache/github.com/bar/foo').and_return(true)
+      allow(Dir).to receive(:exist?).with('cache/github.com/bar/foo/.git').and_return(true)
       git = double
       expect(GitRepo).to receive(:new).with('cache/github.com/bar/foo').and_return(git)
       expect(git).to receive(:pull)

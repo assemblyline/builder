@@ -7,7 +7,7 @@ class GitUrl
   end
 
   def cache_path
-    "/etc/assemblyline/git_cache/#{host}/#{org}/#{repo}"
+    "/tmp/assemblyline/git_cache/#{host}/#{org}/#{repo}"
   end
 
   attr_reader :url

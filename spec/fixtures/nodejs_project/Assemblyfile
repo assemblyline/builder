@@ -9,6 +9,7 @@ repo = "quay.io/reevoo/fast_awesome_web"
   script = [
     'echo foo',
     'echo bar',
-    'mkdir /dist',
-    'touch /dist/foo.txt'
+    'mkdir -p /dist',
+    'touch /dist/foo.txt',
   ]
+  target = '/dist'

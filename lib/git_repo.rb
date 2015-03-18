@@ -3,7 +3,7 @@ require 'minigit'
 class GitRepo
 
   def self.clone(*args)
-    MiniGit.clone(*args)
+    MiniGit.git :clone, *args
   end
 
   def initialize(path)

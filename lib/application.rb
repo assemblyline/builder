@@ -6,7 +6,7 @@ class Application
     self.repo = data['repo']
   end
 
-  attr_reader :builder, :path, :name
+  attr_reader :builder, :path, :name, :repo
 
   def build
     builder.build
@@ -14,17 +14,20 @@ class Application
 
   def push
     auth_docker
-    Docker::Image.get(tag).push { |s| puts JSON.parse(s)['status'] }
+    Docker::Image.get(full_tag).push { |s| puts JSON.parse(s)['status'] }
+  end
+
+  def full_tag
+    "#{repo}:#{tag}"
   end
 
   def tag
-    @_tag ||= "#{repo}:#{sha}_#{timestamp}"
+    @_tag ||= "#{sha}_#{timestamp}"
   end
 
   protected
 
-  attr_writer :builder, :path, :name
-  attr_accessor :repo
+  attr_writer :builder, :path, :name, :repo
 
   private
 
