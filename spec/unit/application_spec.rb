@@ -14,24 +14,16 @@ describe Application do
   end
 
   let(:dir) { Dir.mktmpdir }
+  let(:git_sha) { 'ef60fd' }
 
   after do
     FileUtils.rm_rf dir
   end
 
-  subject { described_class.new(data, dir) }
+  subject { described_class.new(data, dir, git_sha) }
 
 
   describe '#tag' do
-    let!(:git_sha) do
-      MiniGit::Capturing.init dir
-      FileUtils.touch("#{dir}/file.txt")
-      git = MiniGit::Capturing.new(dir)
-      git.add '.'
-      git.commit m: 'test commit'
-      git.rev_parse({ short: true }, :HEAD).chomp
-    end
-
     it 'constructs the correct tag' do
       allow(Time).to receive(:now).and_return(Time.at(1_426_533_532))
       expect(subject.tag).to eq("#{git_sha}_20150316191852")

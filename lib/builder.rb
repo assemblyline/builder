@@ -11,12 +11,11 @@ class Builder
   end
 
   def build
-    cache.make_working_copy do |dir|
-      Assemblyfile.load(dir).each do |application|
+    cache.make_working_copy do |dir, sha|
+      Assemblyfile.load(dir, sha).each do |application|
         application.build
         application.push
       end
-      # Submit Docker Tag to shipping agent and push image
     end
   end
 

@@ -1,7 +1,8 @@
 require 'json'
 
 class Application
-  def initialize(data, dir)
+  def initialize(data, dir, sha)
+    self.sha = sha
     self.name = data['name']
     self.path = File.expand_path(File.join(dir, data['path']))
     self.builder = load_builder(data['build'])
@@ -30,6 +31,7 @@ class Application
   protected
 
   attr_writer :builder, :path, :name, :repo
+  attr_accessor :sha
 
   private
 
@@ -62,10 +64,6 @@ class Application
 
   def timestamp
     Time.now.strftime('%Y%m%d%H%M%S')
-  end
-
-  def sha
-    GitRepo.new(path).sha
   end
 
   def load_builder(build)

@@ -8,7 +8,7 @@ describe GitUrl do
     let(:url) { 'git@github.com:reevoo/awesome_project.git' }
 
     it 'extracts a cache path' do
-      expect(subject.cache_path).to eq '/tmp/assemblyline/git_cache/github.com/reevoo/awesome_project'
+      expect(subject.cache_path).to eq '/tmp/assemblyline/git_cache/github.com/reevoo/awesome_project.git'
     end
   end
 
@@ -16,7 +16,7 @@ describe GitUrl do
     let(:url) { 'https://github.com/assemblyline/shipping_agent.git' }
 
     it 'extracts a cache path' do
-      expect(subject.cache_path).to eq '/tmp/assemblyline/git_cache/github.com/assemblyline/shipping_agent'
+      expect(subject.cache_path).to eq '/tmp/assemblyline/git_cache/github.com/assemblyline/shipping_agent.git'
     end
   end
 

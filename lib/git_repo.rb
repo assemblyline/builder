@@ -14,8 +14,8 @@ class GitRepo
     cgit.rev_parse({ short: true }, :HEAD).chomp
   end
 
-  def pull
-    git.pull
+  def fetch
+    git.fetch
   end
 
   private

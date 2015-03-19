@@ -8,7 +8,7 @@ class GitCache
   end
 
   def refresh
-    if Dir.exist? File.join(git_url.cache_path, '.git')
+    if Dir.exist? git_url.cache_path
       fetch
     else
       clone
@@ -17,10 +17,12 @@ class GitCache
 
   def make_working_copy
     Dir.mktmpdir do |dir|
+      workdir = File.join(dir, git_url.repo)
       refresh
-      system "cp -rp #{git_url.cache_path} #{dir}"
-      FileUtils.rm_r File.join("#{dir}/.git"), force: true, secure: true
-      yield "#{dir}/#{git_url.repo}"
+      GitRepo.clone(git_url.cache_path, workdir)
+      sha = GitRepo.new(workdir).sha
+      FileUtils.rm_r File.join(workdir, '.git'), force: true, secure: true
+      yield workdir, sha
     end
   end
 
@@ -30,10 +32,10 @@ class GitCache
 
   def clone
     FileUtils.mkdir_p git_url.cache_path
-    GitRepo.clone(git_url.url, git_url.cache_path)
+    GitRepo.clone(git_url.url, git_url.cache_path, mirror: true)
   end
 
   def fetch
-    GitRepo.new(git_url.cache_path).pull
+    GitRepo.new(git_url.cache_path).fetch
   end
 end

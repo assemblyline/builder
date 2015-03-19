@@ -11,12 +11,12 @@ describe GitRepo do
     end
   end
 
-  describe '#pull' do
-    it 'calls the MiniGit pull method' do
+  describe '#fetch' do
+    it 'calls the MiniGit fetch method' do
       git = double
       allow(MiniGit).to receive(:new).with(Dir.pwd).and_return(git)
-      expect(git).to receive(:pull)
-      subject.pull
+      expect(git).to receive(:fetch)
+      subject.fetch
     end
   end
 
