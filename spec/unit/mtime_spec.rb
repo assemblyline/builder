@@ -9,15 +9,23 @@ describe Mtime do
       Dir.mktmpdir do |dir|
         FileUtils.touch "#{dir}/foo"
         FileUtils.touch "#{dir}/bar"
+        FileUtils.touch "#{dir}/.bar"
         FileUtils.mkdir_p "#{dir}/foo-bar"
+        FileUtils.mkdir_p "#{dir}/.foo-bar"
         FileUtils.touch "#{dir}/foo-bar/baz.something"
+        FileUtils.touch "#{dir}/foo-bar/.baz.something"
+        FileUtils.touch "#{dir}/.foo-bar/.baz.something"
 
         Mtime.clobber(dir)
 
         expect(File.new("#{dir}/foo").mtime).to eq Time.at(1)
         expect(File.new("#{dir}/bar").mtime).to eq Time.at(1)
+        expect(File.new("#{dir}/.bar").mtime).to eq Time.at(1)
         expect(File.new("#{dir}/foo-bar").mtime).to eq Time.at(1)
+        expect(File.new("#{dir}/.foo-bar").mtime).to eq Time.at(1)
         expect(File.new("#{dir}/foo-bar/baz.something").mtime).to eq Time.at(1)
+        expect(File.new("#{dir}/foo-bar/.baz.something").mtime).to eq Time.at(1)
+        expect(File.new("#{dir}/.foo-bar/.baz.something").mtime).to eq Time.at(1)
       end
     end
 

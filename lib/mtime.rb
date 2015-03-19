@@ -8,14 +8,19 @@
 # to fix this https://github.com/docker/docker/issues/4351
 # if that gets done we should use that insted of this
 class Mtime
+  CLOBBER_TIME = Time.at(1)
+
   def self.clobber(path)
-    t = Time.at(1)
-    Dir[File.join(path, '**/**')].each do |p|
-      begin
-        File.utime(t, t, p)
-      rescue Errno::ENOENT => e
-        $stderr.puts "WARN mtime clobber failed for #{p} with: #{e.message}"
-      end
+    Dir.glob(File.join(path, "**/**"), File::FNM_DOTMATCH).each do |p|
+      clobber_file p
     end
+  end
+
+  private
+
+  def self.clobber_file(p)
+    File.utime(CLOBBER_TIME, CLOBBER_TIME, p)
+  rescue Errno::ENOENT => e
+    $stderr.puts "WARN mtime clobber failed for #{p} with: #{e.message}"
   end
 end
