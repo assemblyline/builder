@@ -60,10 +60,7 @@ describe GitCache do
     it 'clones the code into place' do
       expect(Dir).to receive(:mktmpdir).and_yield(tmp_dir)
       allow(subject).to receive(:refresh)
-      expect(GitRepo).to receive(:clone).and_call_original do |from, to|
-        expect(from).to eq cache_path
-        expect(to).to eq "#{tmp_dir}/foo"
-      end
+      expect(GitRepo).to receive(:clone).with(cache_path, "#{tmp_dir}/foo").and_call_original
       subject.make_working_copy {}
     end
 
