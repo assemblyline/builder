@@ -17,7 +17,8 @@ class Application
 
   def push
     auth_docker
-    Docker::Image.get(full_tag).push { |s| puts JSON.parse(s)['status'] }
+    puts "pushing #{full_tag} =>"
+    Docker::Image.get(full_tag).push { printf '.' }
   end
 
   def full_tag

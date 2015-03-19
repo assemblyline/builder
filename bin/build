@@ -5,4 +5,5 @@ $LOAD_PATH.unshift File.expand_path('../../lib', Pathname.new(__FILE__).realpath
 
 require 'builder'
 
+$stdout.sync = true
 Builder.new(url: ARGV[0]).build
