@@ -1,5 +1,6 @@
 require 'docker'
 require 'git_repo'
+require 'mtime'
 
 class Builder
   class Dockerfile
@@ -8,6 +9,7 @@ class Builder
     end
 
     def build
+      Mtime.clobber(application.path)
       system "docker build -t #{application.full_tag} #{application.path}"
     end
 
