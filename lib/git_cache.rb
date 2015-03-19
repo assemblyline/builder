@@ -19,6 +19,7 @@ class GitCache
     Dir.mktmpdir do |dir|
       refresh
       system "cp -rp #{git_url.cache_path} #{dir}"
+      FileUtils.rm_r File.join("#{dir}/.git"), force: true, secure: true
       yield "#{dir}/#{git_url.repo}"
     end
   end
