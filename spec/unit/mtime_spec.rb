@@ -20,5 +20,14 @@ describe Mtime do
         expect(File.new("#{dir}/foo-bar/baz.something").mtime).to eq Time.at(1)
       end
     end
+
+    context 'with a broken symlink' do
+      it 'does not blow up' do
+        Dir.mktmpdir do |dir|
+          FileUtils.ln_s '/not/a/real/path/to_anything', "#{dir}/broken"
+          expect { Mtime.clobber(dir) }.to_not raise_error
+        end
+      end
+    end
   end
 end

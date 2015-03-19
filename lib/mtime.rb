@@ -11,7 +11,11 @@ class Mtime
   def self.clobber(path)
     t = Time.at(1)
     Dir[File.join(path, '**/**')].each do |p|
-      File.utime(t, t, p)
+      begin
+        File.utime(t, t, p)
+      rescue Errno::ENOENT => e
+        $stderr.puts "WARN mtime clobber failed for #{p} with: #{e.message}"
+      end
     end
   end
 end
