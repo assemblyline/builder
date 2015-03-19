@@ -45,7 +45,7 @@ class Builder
       write 'Dockerfile', "FROM nginx\nCOPY . /usr/share/nginx/html"
     end
 
-    def write(name, content)
+    def write(_name, content)
       file = File.new(File.join(target, 'Dockerfile'), 'w')
       file.write content
       file.close
@@ -57,16 +57,21 @@ class Builder
     end
 
     def exit_code
-      container.json["State"]["ExitCode"]
+      container.json['State']['ExitCode']
     end
 
     def create_container
       Docker::Image.create('fromImage' => 'quay.io/assemblyline/builder-frontendjs')
-      Docker::Container.create('Cmd' => command, 'Image' => 'quay.io/assemblyline/builder-frontendjs', 'Volumes' => { '/tmp' => {} }, 'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}"])
+      Docker::Container.create(
+        'Cmd' => command,
+        'Image' => 'quay.io/assemblyline/builder-frontendjs',
+        'Volumes' => { '/tmp' => {} },
+        'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}"],
+      )
     end
 
     def command
-      ["bash", "-c", script.join(" && ")]
+      ['bash', '-c', script.join(' && ')]
     end
 
     def script

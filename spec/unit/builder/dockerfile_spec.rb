@@ -7,7 +7,7 @@ describe Builder::Dockerfile do
 
   describe 'doing the docker build' do
     it 'shells out to the docker client with the correct args' do
-      expect(subject).to receive(:system).with("docker build -t foo.com/foo/bar:awesome /foo/bar")
+      expect(subject).to receive(:system).with('docker build -t foo.com/foo/bar:awesome /foo/bar')
       subject.build
     end
   end

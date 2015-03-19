@@ -3,7 +3,7 @@ require 'builder'
 require 'builder/dockerfile'
 
 describe Builder do
-  subject { described_class.new(url: "git@github.com:reevoo/awesome_app.git") }
+  subject { described_class.new(url: 'git@github.com:reevoo/awesome_app.git') }
   let(:docker_builder) { double(:docker_builder) }
   let(:git_cache) { double(:git_cache) }
 

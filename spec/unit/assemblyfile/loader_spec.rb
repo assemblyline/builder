@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'assemblyfile/loader'
 
 describe Assemblyfile do
-  subject { described_class.load(File.expand_path("../../../fixtures/dockerfile_project", __FILE__)) }
+  subject { described_class.load(File.expand_path('../../../fixtures/dockerfile_project', __FILE__)) }
 
   it 'loads the Assemblyfile in the given dir' do
     expect(subject.size).to eq 1

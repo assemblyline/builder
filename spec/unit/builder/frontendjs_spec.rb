@@ -30,7 +30,7 @@ describe Builder::FrontendJS do
 
       it 'runs npm install' do
         expect(Docker::Container).to receive(:create) do |options|
-          expect(options['Cmd'].last).to include "npm install"
+          expect(options['Cmd'].last).to include 'npm install'
         end
         subject
       end
@@ -41,7 +41,7 @@ describe Builder::FrontendJS do
 
       it 'runs bower install' do
         expect(Docker::Container).to receive(:create) do |options|
-          expect(options['Cmd'].last).to include "bower install --allow-root"
+          expect(options['Cmd'].last).to include 'bower install --allow-root'
         end
         subject
       end
@@ -52,7 +52,7 @@ describe Builder::FrontendJS do
 
       it 'runs grunt' do
         expect(Docker::Container).to receive(:create) do |options|
-          expect(options['Cmd'].last).to include "grunt"
+          expect(options['Cmd'].last).to include 'grunt'
         end
         subject
       end
@@ -91,7 +91,7 @@ describe Builder::FrontendJS do
     let(:packaged_image) { double(:packaged_image, tag: nil) }
 
     before do
-      FileUtils::mkdir_p base_path + '/dist'
+      FileUtils.mkdir_p base_path + '/dist'
       allow(Docker::Image).to receive(:build_from_dir).and_return(packaged_image)
     end
 

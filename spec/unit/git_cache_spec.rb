@@ -26,7 +26,7 @@ describe GitCache do
     it 'refreshes the code' do
       expect(subject).to receive(:refresh)
       allow(subject).to receive(:system)
-      subject.make_working_copy { }
+      subject.make_working_copy {}
     end
 
     it 'copies the code into place' do
@@ -35,7 +35,7 @@ describe GitCache do
       expect(subject).to receive(:system) do |command|
         expect(command).to eq 'cp -rp cache/github.com/bar/foo /tmp/23rg526t3u'
       end
-      subject.make_working_copy { }
+      subject.make_working_copy {}
     end
 
     it 'yields the tmpdir' do

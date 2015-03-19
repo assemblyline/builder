@@ -3,7 +3,7 @@ require 'git_repo'
 
 class Builder
   class Dockerfile
-    def initialize(application:, build:)
+    def initialize(application:, build:) # rubocop:disable Lint/UnusedMethodArgument
       self.application = application
     end
 

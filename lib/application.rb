@@ -39,7 +39,7 @@ class Application
         'email' => config['email'],
         'username' => username(config['auth']),
         'password' => password(config['auth']),
-        'serveraddress' => index
+        'serveraddress' => index,
       )
     end
   end

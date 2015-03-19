@@ -11,7 +11,7 @@ class GitRepo
   end
 
   def sha
-    cgit.rev_parse({short: true}, :HEAD).chomp
+    cgit.rev_parse({ short: true }, :HEAD).chomp
   end
 
   def pull

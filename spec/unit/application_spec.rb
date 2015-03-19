@@ -29,20 +29,20 @@ describe Application do
       git = MiniGit::Capturing.new(dir)
       git.add '.'
       git.commit m: 'test commit'
-      git.rev_parse({short: true}, :HEAD).chomp
+      git.rev_parse({ short: true }, :HEAD).chomp
     end
 
     it 'constructs the correct tag' do
-      allow(Time).to receive(:now).and_return(Time.at(1426533532))
+      allow(Time).to receive(:now).and_return(Time.at(1_426_533_532))
       expect(subject.tag).to eq("#{git_sha}_20150316191852")
     end
 
     it 'the tag remains the same even if time is ticking' do
-      allow(Time).to receive(:now).and_return(Time.at(1426533532))
+      allow(Time).to receive(:now).and_return(Time.at(1_426_533_532))
       expect(subject.tag).to eq("#{git_sha}_20150316191852")
       # Time will move forward while we build the image
-      allow(Time).to receive(:now).and_return(Time.at(1526533532))
-      #but the timestamp should be the same here
+      allow(Time).to receive(:now).and_return(Time.at(1_526_533_532))
+      # but the timestamp should be the same here
       expect(subject.tag).to eq("#{git_sha}_20150316191852")
     end
 
@@ -65,11 +65,16 @@ describe Application do
     let(:image) { double }
 
     before do
-      ENV['DOCKERCFG'] = "{\"https://index.docker.io/v1/\":{\"auth\":\"ZXJybTpwYXNzd29yZA\",\"email\":\"ed@reevoo.com\"}}"
+      ENV['DOCKERCFG'] = "{\"https://index.docker.io/v1/\":{\"auth\":\"ZXJybTpwYXNzd29yZA\",\"email\":\"ed@reevoo.com\"}}" # rubocop:disable Metrics/LineLength
     end
 
     it 'pushes the tagged image to the repo' do
-      expect(Docker).to receive(:authenticate!).with("email"=>"ed@reevoo.com", "username"=>"errm", "password"=>"password", "serveraddress"=>"https://index.docker.io/v1/")
+      expect(Docker).to receive(:authenticate!).with(
+        'email' => 'ed@reevoo.com',
+        'username' => 'errm',
+        'password' => 'password',
+        'serveraddress' => 'https://index.docker.io/v1/',
+      )
       allow(subject).to receive(:full_tag).and_return('awesome_tag')
       allow(Docker::Image).to receive(:get).with('awesome_tag').and_return(image)
       expect(image).to receive(:push)
