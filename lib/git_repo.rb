@@ -1,4 +1,5 @@
 require 'minigit'
+require 'securerandom'
 
 class GitRepo
 
@@ -18,7 +19,18 @@ class GitRepo
     git.fetch
   end
 
+  def merge(ref)
+    cgit.checkout({b: working_branch}, ref)
+    cgit.checkout :master
+    cgit.merge(working_branch ,'no-ff' => true, m: 'merge branch working copy')
+    cgit.branch(d: working_branch)
+  end
+
   private
+
+  def working_branch
+    @_working_branch ||= "assemblyline-#{SecureRandom.urlsafe_base64}"
+  end
 
   def cgit
     git.capturing

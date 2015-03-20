@@ -4,14 +4,14 @@ require 'tmpdir'
 require 'assemblyfile/loader'
 
 class Builder
-  def initialize(url:)
+  def initialize(url:, branch: nil)
     @url = GitUrl.new url
     @path = path
     @branch = branch
   end
 
   def build
-    cache.make_working_copy do |dir, sha|
+    cache.make_working_copy(branch: branch) do |dir, sha|
       Assemblyfile.load(dir, sha).each do |application|
         application.build
         application.push

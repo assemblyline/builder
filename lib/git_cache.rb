@@ -15,11 +15,12 @@ class GitCache
     end
   end
 
-  def make_working_copy
+  def make_working_copy(branch: branch)
     Dir.mktmpdir do |dir|
       workdir = File.join(dir, git_url.repo)
       refresh
       GitRepo.clone(git_url.cache_path, workdir)
+      merge(branch, workdir) if branch
       sha = GitRepo.new(workdir).sha
       FileUtils.rm_r File.join(workdir, '.git'), force: true, secure: true
       yield workdir, sha
@@ -37,5 +38,9 @@ class GitCache
 
   def fetch
     GitRepo.new(git_url.cache_path).fetch
+  end
+
+  def merge(ref, dir)
+    GitRepo.new(dir).merge(ref)
   end
 end

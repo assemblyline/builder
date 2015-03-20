@@ -47,6 +47,11 @@ describe GitCache do
       Dir.mktmpdir
     end
 
+    before do
+      allow(subject).to receive(:refresh)
+    end
+
+
     after do
       FileUtils.rm_rf tmp_dir
     end
@@ -59,17 +64,32 @@ describe GitCache do
 
     it 'clones the code into place' do
       expect(Dir).to receive(:mktmpdir).and_yield(tmp_dir)
-      allow(subject).to receive(:refresh)
       expect(GitRepo).to receive(:clone).with(cache_path, "#{tmp_dir}/foo").and_call_original
       subject.make_working_copy {}
     end
 
     it 'yields the tmpdir' do
       expect(Dir).to receive(:mktmpdir).and_yield(tmp_dir)
-      allow(subject).to receive(:refresh)
       subject.make_working_copy do |dir, sha|
         expect(sha).to eq git_sha
         expect(dir).to eq File.join(tmp_dir, 'foo')
+      end
+    end
+
+    context 'without a branch specified' do
+      it 'does not try to merge anything' do
+        expect_any_instance_of(GitRepo).to_not receive(:merge)
+        subject.make_working_copy {}
+      end
+    end
+
+    context 'when a branch is specfied' do
+      it 'it trys to merge it' do
+        expect(Dir).to receive(:mktmpdir).and_yield(tmp_dir)
+        expect(GitRepo).to receive(:new).with("#{tmp_dir}/foo").at_least(:once).and_call_original
+        expect_any_instance_of(GitRepo).to receive(:merge).with('foo-ref')
+
+        subject.make_working_copy(branch: 'foo-ref') {}
       end
     end
   end
