@@ -97,8 +97,12 @@ class Builder
 
     def attach
       container.attach(logs: true) do |stream, chunk|
-        printf "#{stream}: ".red if stream != :stdout
-        puts chunk
+        case stream
+        when :stdout
+          printf chunk
+        when :stderr
+          $stderr.printf chunk
+        end
       end
     end
   end

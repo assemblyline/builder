@@ -1,4 +1,5 @@
 require 'json'
+require 'colorize'
 
 class Application
   def initialize(data, dir, sha)
@@ -17,8 +18,9 @@ class Application
 
   def push
     auth_docker
-    puts "pushing #{full_tag} =>"
+    printf "pushing #{full_tag} =>".bold.green
     Docker::Image.get(full_tag).push { printf '.' }
+    puts ''
   end
 
   def full_tag
