@@ -9,6 +9,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D78692
       && truncate -s 0 /var/log/*log
 RUN ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts
 ENV GIT_SSH=/usr/src/bin/git_ssh
+RUN git config --global user.email "assemblyline@reevoo.com" && git config --global user.name "Assemblyline Build Worker"
 
 WORKDIR /usr/src
 ADD Gemfile ./
