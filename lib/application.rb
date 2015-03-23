@@ -1,13 +1,14 @@
 require 'docker'
 require 'json'
 require 'colorize'
+require 'builder'
 
 class Application
   def initialize(data, dir, sha)
     self.sha = sha
     self.name = data['application']['name']
     self.path = dir
-    self.builder = load_builder(data['build'])
+    self.builder = Builder.load_builder(application: self, build: data['build'])
     self.repo = data['application']['repo']
   end
 
@@ -22,7 +23,7 @@ class Application
     printf "pushing #{full_tag} =>".bold.green
     image = Docker::Image.get(full_tag)
     image.tag('repo' => repo, 'tag' => tag, 'force' => true)
-    image.push { |chunk| print chunk }
+    image.push('tag' => 'foofoo') { |chunk| format_push_status(chunk) }
   end
 
   def full_tag
@@ -51,6 +52,13 @@ class Application
     end
   end
 
+  def format_push_status(chunk)
+    json = JSON.parse(chunk)
+    require 'pry'
+    binding.pry
+    print json['status']
+  end
+
   def username(auth)
     decode(auth).first
   end
@@ -69,11 +77,5 @@ class Application
 
   def timestamp
     Time.now.strftime('%Y%m%d%H%M%S')
-  end
-
-  def load_builder(build)
-    name = build['builder']
-    require "builder/#{name.downcase}"
-    Module.const_get("Builder::#{name}").new(application: self, build: build)
   end
 end

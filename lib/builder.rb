@@ -4,6 +4,15 @@ require 'tmpdir'
 require 'assemblyfile/loader'
 
 class Builder
+
+  def self.load_builder(application: application, build: build)
+    name = build['builder']
+    require "builder/#{name.downcase}"
+    const_get(
+      constants.detect { |c| c.to_s.downcase == name.downcase },
+    ).new(application: application, build: build)
+  end
+
   def initialize(url:, branch: nil)
     @url = GitUrl.new url
     @path = path
