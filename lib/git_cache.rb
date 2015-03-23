@@ -22,7 +22,6 @@ class GitCache
       GitRepo.clone(git_url.cache_path, workdir)
       merge(branch, workdir) if branch
       sha = GitRepo.new(workdir).sha
-      FileUtils.rm_r File.join(workdir, '.git'), force: true, secure: true
       yield workdir, sha
     end
   end

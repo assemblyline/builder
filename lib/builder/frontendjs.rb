@@ -99,9 +99,9 @@ class Builder
       container.attach(logs: true) do |stream, chunk|
         case stream
         when :stdout
-          printf chunk
+          print chunk
         when :stderr
-          $stderr.printf chunk
+          $stderr.print chunk
         end
       end
     end

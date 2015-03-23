@@ -4,10 +4,10 @@ require 'colorize'
 class Application
   def initialize(data, dir, sha)
     self.sha = sha
-    self.name = data['name']
-    self.path = File.expand_path(File.join(dir, data['path']))
+    self.name = data['application']['name']
+    self.path = dir
     self.builder = load_builder(data['build'])
-    self.repo = data['repo']
+    self.repo = data['application']['repo']
   end
 
   attr_reader :builder, :path, :name, :repo
