@@ -1,3 +1,4 @@
+require 'docker'
 require 'json'
 require 'colorize'
 
@@ -19,8 +20,9 @@ class Application
   def push
     auth_docker
     printf "pushing #{full_tag} =>".bold.green
-    Docker::Image.get(full_tag).push { printf '.' }
-    puts ''
+    image = Docker::Image.get(full_tag)
+    image.tag('repo' => repo, 'tag' => tag, 'force' => true)
+    image.push { |chunk| print chunk }
   end
 
   def full_tag

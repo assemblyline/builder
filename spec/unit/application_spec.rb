@@ -75,7 +75,13 @@ describe Application do
         'serveraddress' => 'https://index.docker.io/v1/',
       )
       allow(subject).to receive(:full_tag).and_return('awesome_tag')
+      allow(subject).to receive(:tag).and_return('atag')
       allow(Docker::Image).to receive(:get).with('awesome_tag').and_return(image)
+      expect(image).to receive(:tag).with(
+        'repo' => 'foo.com/foo/bar',
+        'tag' => 'atag',
+        'force' => true,
+      )
       expect(image).to receive(:push)
       subject.push
     end
