@@ -7,8 +7,10 @@ require 'fileutils'
 describe Application do
   let(:data) do
     {
-      'path' => '.',
-      'repo' => 'foo.com/foo/bar',
+      'application' => {
+        'repo' => 'foo.com/foo/bar',
+        'name' => 'The Worlds Best Webapp II',
+      },
       'build' => { 'builder' => 'Dockerfile' },
     }
   end
@@ -45,6 +47,11 @@ describe Application do
     end
   end
 
+  describe '#name' do
+    it 'uses the name from the data' do
+      expect(subject.name).to eq 'The Worlds Best Webapp II'
+    end
+  end
 
   describe '#build' do
     it 'calls the builder' do
