@@ -38,7 +38,7 @@ describe GitRepo do
 
     after { FileUtils.rm_rf working_dir }
 
-    def setup(dir)
+    def setup(dir) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       MiniGit::Capturing.init dir
       FileUtils.touch File.join(dir, 'master')
       git.add('master')

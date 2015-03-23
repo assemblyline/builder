@@ -20,9 +20,9 @@ class GitRepo
   end
 
   def merge(ref)
-    cgit.checkout({b: working_branch}, ref)
+    cgit.checkout({ b: working_branch }, ref)
     cgit.checkout :master
-    cgit.merge(working_branch ,'no-ff' => true, m: 'merge branch working copy')
+    cgit.merge(working_branch, 'no-ff' => true, m: 'merge branch working copy')
     cgit.branch(d: working_branch)
   end
 
