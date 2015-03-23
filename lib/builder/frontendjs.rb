@@ -68,16 +68,16 @@ class Builder
         'Cmd' => command,
         'Image' => 'quay.io/assemblyline/builder-frontendjs',
         'Volumes' => { '/tmp' => {} },
-        'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}"],
+        'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}", 'PS4=$ '],
       )
     end
 
     def command
-      ['bash', '-c', script.join(' && ')]
+      ['bash', '-xce', script.join('; ') + ';']
     end
 
     def script
-      ["cd #{application.path}"] + (@script || npm + bower + grunt)
+      ["cd #{application.path}"] + (versions + (@script || npm + bower + grunt))
     end
 
     def grunt
@@ -93,6 +93,15 @@ class Builder
     def bower
       return [] unless File.exist?(File.join(application.path, 'bower.json'))
       ['bower install --allow-root']
+    end
+
+    def versions
+      [
+        'node --version',
+        'npm --version',
+        'bower --version',
+        'grunt --version',
+      ]
     end
 
     def attach

@@ -18,6 +18,14 @@ describe Builder::FrontendJS do
   end
 
   describe 'the build script' do
+
+    it 'runs the script with bash' do
+      expect(Docker::Container).to receive(:create) do |options|
+        expect(options['Cmd'].first(2)).to eq ['bash', '-xce']
+      end
+      subject
+    end
+
     it 'cd into the application path' do
       expect(Docker::Container).to receive(:create) do |options|
         expect(options['Cmd'].last).to include "cd #{path}"
@@ -61,7 +69,7 @@ describe Builder::FrontendJS do
     context 'all the things' do
       it 'runs the expected commands in sequence' do
         expect(Docker::Container).to receive(:create) do |options|
-          expect(options['Cmd'].last).to eq "cd #{path} && npm install && bower install --allow-root && grunt"
+          expect(options['Cmd'].last).to eq "cd #{path}; node --version; npm --version; bower --version; grunt --version; npm install; bower install --allow-root; grunt;"
         end
         subject
       end
@@ -79,7 +87,7 @@ describe Builder::FrontendJS do
 
       it 'uses the script' do
         expect(Docker::Container).to receive(:create) do |options|
-          expect(options['Cmd'].last).to eq "cd #{path} && echo foo && echo bar"
+          expect(options['Cmd'].last).to eq "cd #{path}; node --version; npm --version; bower --version; grunt --version; echo foo; echo bar;"
         end
         subject
       end
