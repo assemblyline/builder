@@ -84,9 +84,9 @@ describe Application do
       let(:data) do
         {
           'application' => {
-          'name' => 'The Worlds Best Webapp II',
-        },
-        'build' => { 'builder' => 'Dockerfile' },
+            'name' => 'The Worlds Best Webapp II',
+          },
+          'build' => { 'builder' => 'Dockerfile' },
         }
       end
 

@@ -103,7 +103,7 @@ describe Builder::FrontendJS do
             'bower --version',
             'grunt --version',
             'echo foo',
-            'echo bar'
+            'echo bar',
           ])
         end
         subject

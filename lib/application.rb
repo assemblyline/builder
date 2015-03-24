@@ -60,22 +60,25 @@ class Application
 
   def format_push_status(chunk)
     json = JSON.parse(chunk)
+    output_error(json['error'])
+    output_status(json['status'])
+  end
 
-    if json['error']
-      $stderr.puts json['error']
-      exit 1
-    end
-
-    case json['status']
-    when 'Pushing'
-      print '.'
-    when 'Buffering to disk'
+  def output_status(status)
+    case status
+    when 'Pushing', 'Buffering to disk'
       print '.'
     when 'Image successfully pushed'
-      puts "\n#{json['status']}"
+      puts "\n" + status
     else
-      puts json['status']
+      puts status
     end
+  end
+
+  def output_error(error)
+    return unless error
+    $stderr.puts error
+    exit 1
   end
 
   def username(auth)
@@ -99,6 +102,6 @@ class Application
   end
 
   def local_repo
-    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/,'')
+    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/, '')
   end
 end

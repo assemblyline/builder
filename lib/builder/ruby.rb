@@ -36,7 +36,7 @@ class Builder
     def run_tests
       ContainerRunner.new(
         image: application.full_tag,
-        script: script
+        script: script,
       ).run
     end
 

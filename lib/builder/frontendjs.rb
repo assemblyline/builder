@@ -84,10 +84,10 @@ class Builder
     end
 
     def versions
-      vers = [ 'node --version' ]
-      vers += [ 'npm --version' ] if npm?
-      vers += [ 'bower --version' ] if bower?
-      vers += [ 'grunt --version' ] if grunt?
+      vers = ['node --version']
+      vers += ['npm --version'] if npm?
+      vers += ['bower --version'] if bower?
+      vers += ['grunt --version'] if grunt?
       vers
     end
 

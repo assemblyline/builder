@@ -23,11 +23,11 @@ class ContainerRunner
   private
 
   def command
-    ['bash', '-xce', script.map { |c| c + ' ;' }.join ]
+    ['bash', '-xce', script.map { |c| c + ' ;' }.join]
   end
 
   def env
-    @env.merge('PS4' => '$ ').map { |var,val| "#{var}=#{val}" }
+    @env.merge('PS4' => '$ ').map { |var, val| "#{var}=#{val}" }
   end
 
   def container
