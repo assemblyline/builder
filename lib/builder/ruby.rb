@@ -9,6 +9,7 @@ class Builder
       self.application = application
       self.ruby_version = build['version'] || detect_ruby_version
       self.ignore = build['ignore'] || []
+      self.script = build['script']
     end
 
     def build
@@ -20,7 +21,7 @@ class Builder
     protected
 
     attr_accessor :application, :ruby_version, :image
-    attr_writer :ignore
+    attr_writer :ignore, :script
 
     private
 
@@ -34,17 +35,18 @@ class Builder
     end
 
     def run_tests
+      application.start_services
       ContainerRunner.new(
         image: application.full_tag,
         script: script,
+        env: application.env
       ).run
+    ensure
+      application.stop_services
     end
 
     def script
-      [
-        'rspec --version',
-        'rspec',
-      ]
+      @script || [ 'bundle exec rake' ]
     end
 
     def dockerfile_build
