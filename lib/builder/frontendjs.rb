@@ -1,6 +1,5 @@
 require 'colorize'
 require 'docker'
-require 'mtime'
 
 class Builder
   class FrontendJS
@@ -37,7 +36,6 @@ class Builder
 
     def package_target
       generate_dockerfile
-      Mtime.clobber(target)
       image = Docker::Image.build_from_dir(target) { |chunk| puts JSON.parse(chunk)['stream'] }
       image.tag('repo' => application.repo, 'tag' => application.tag)
     end

@@ -1,21 +1,30 @@
 require 'docker'
-require 'git_repo'
-require 'mtime'
+require 'patch/rubygems'
 
 class Builder
   class Dockerfile
-    def initialize(application:, build:) # rubocop:disable Lint/UnusedMethodArgument
+    def initialize(application:, build: nil, path: nil) # rubocop:disable Lint/UnusedMethodArgument
       self.application = application
+      self.path = path || application.path
     end
 
     def build
-      Mtime.clobber(application.path)
-      system "docker build -t #{application.full_tag} #{application.path}"
+      image = Docker::Image.build_from_dir(path) { |chunk| format_build_status(chunk) }
+      image.tag('repo' => application.repo, 'tag' => application.tag, 'force' => true)
+      image
     end
 
     protected
 
-    attr_accessor :application
+    attr_accessor :application, :path
 
+    def format_build_status(chunk)
+      json = JSON.parse(chunk)
+      if json['error']
+        $stderr.puts json['error']
+        exit 1
+      end
+      puts json['stream']
+    end
   end
 end
