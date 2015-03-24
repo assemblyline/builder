@@ -1,0 +1,6 @@
+[application]
+name = 'simple_app'
+
+[build]
+builder = 'ruby'
+version = '2.1.5'

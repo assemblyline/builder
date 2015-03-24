@@ -5,6 +5,7 @@ before_script:
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
   - git config --global push.default simple
+script: bundle exec rake travis
 addons:
   code_climate:
     repo_token: 50e550bf7566d9ba05d4fc103159b9077552447a931038461f5e08e8a56b4695
