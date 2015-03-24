@@ -1,0 +1,10 @@
+FROM quay.io/assemblyline/ruby:<%= ruby_version %>
+
+WORKDIR /usr/src
+
+COPY Gemfile ./
+COPY Gemfile.lock ./
+
+RUN bundle install -j4 -r3
+
+COPY . .

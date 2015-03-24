@@ -9,21 +9,21 @@ class Application
     self.name = data['application']['name']
     self.path = dir
     self.builder = Builder.load_builder(application: self, build: data['build'])
-    self.repo = data['application']['repo']
+    self.repo = data['application']['repo'] || local_repo
   end
 
   attr_reader :builder, :path, :name, :repo
 
   def build
-    builder.build
+    self.image = builder.build
   end
 
   def push
-    auth_docker
-    printf "pushing #{full_tag} =>".bold.green
-    image = Docker::Image.get(full_tag)
-    image.tag('repo' => repo, 'tag' => tag, 'force' => true)
-    image.push('tag' => 'foofoo') { |chunk| format_push_status(chunk) }
+    if @local_repo
+      $stderr.puts 'no repo specified in config only building project localy'
+    else
+      push_image
+    end
   end
 
   def full_tag
@@ -37,9 +37,15 @@ class Application
   protected
 
   attr_writer :builder, :path, :name, :repo
-  attr_accessor :sha
+  attr_accessor :sha, :image
 
   private
+
+  def push_image
+    auth_docker
+    puts "pushing #{full_tag} =>".bold.green
+    image.push { |chunk| format_push_status(chunk) }
+  end
 
   def auth_docker
     dockercfg.each do |index, config|
@@ -54,9 +60,22 @@ class Application
 
   def format_push_status(chunk)
     json = JSON.parse(chunk)
-    require 'pry'
-    binding.pry
-    print json['status']
+
+    if json['error']
+      $stderr.puts json['error']
+      exit 1
+    end
+
+    case json['status']
+    when 'Pushing'
+      print '.'
+    when 'Buffering to disk'
+      print '.'
+    when 'Image successfully pushed'
+      puts "\n#{json['status']}"
+    else
+      puts json['status']
+    end
   end
 
   def username(auth)
@@ -77,5 +96,9 @@ class Application
 
   def timestamp
     Time.now.strftime('%Y%m%d%H%M%S')
+  end
+
+  def local_repo
+    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/,'')
   end
 end

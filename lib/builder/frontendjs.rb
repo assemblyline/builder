@@ -1,5 +1,7 @@
 require 'colorize'
 require 'docker'
+require 'builder/dockerfile'
+require 'container_runner'
 
 class Builder
   class FrontendJS
@@ -7,8 +9,7 @@ class Builder
       self.application = application
       self.script = build['script']
       self.target = File.join(application.path, build['target'] || 'dist')
-      self.container = create_container
-      set_read_timeout
+      setup_build
     end
 
     def build
@@ -23,21 +24,21 @@ class Builder
 
     private
 
-    def set_read_timeout
-      Excon.defaults[:read_timeout] = 1000
+    def setup_build
+      self.container = ContainerRunner.new(
+        image: 'quay.io/assemblyline/builder-frontendjs',
+        script: script,
+        env: { 'SSH_KEY' => ENV['SSH_KEY'] },
+      )
     end
 
     def run_build
-      container.start('Binds' => ['/tmp:/tmp:rw'])
-      attach
-      exit_if_failed
-      container.delete
+      container.run
     end
 
     def package_target
       generate_dockerfile
-      image = Docker::Image.build_from_dir(target) { |chunk| puts JSON.parse(chunk)['stream'] }
-      image.tag('repo' => application.repo, 'tag' => application.tag)
+      Dockerfile.new(application: application, path: target).build
     end
 
     def generate_dockerfile
@@ -51,66 +52,48 @@ class Builder
       file.close
     end
 
-    def exit_if_failed
-      return if exit_code == 0
-      exit exit_code
-    end
-
-    def exit_code
-      container.json['State']['ExitCode']
-    end
-
-    def create_container
-      Docker::Image.create('fromImage' => 'quay.io/assemblyline/builder-frontendjs')
-      Docker::Container.create(
-        'Cmd' => command,
-        'Image' => 'quay.io/assemblyline/builder-frontendjs',
-        'Volumes' => { '/tmp' => {} },
-        'Env' => ["SSH_KEY=#{ENV['SSH_KEY']}", 'PS4=$ '],
-      )
-    end
-
-    def command
-      ['bash', '-xce', script.join('; ') + ';']
-    end
-
     def script
       ["cd #{application.path}"] + (versions + (@script || npm + bower + grunt))
     end
 
     def grunt
-      return [] unless File.exist?(File.join(application.path, 'Gruntfile.js'))
+      return [] unless grunt?
       ['grunt']
     end
 
+    def grunt?
+      exist? 'Gruntfile.js'
+    end
+
     def npm
-      return [] unless File.exist?(File.join(application.path, 'package.json'))
+      return [] unless npm?
       ['npm install']
     end
 
+    def npm?
+      exist? 'package.json'
+    end
+
     def bower
-      return [] unless File.exist?(File.join(application.path, 'bower.json'))
+      return [] unless bower?
       ['bower install --allow-root']
     end
 
-    def versions
-      [
-        'node --version',
-        'npm --version',
-        'bower --version',
-        'grunt --version',
-      ]
+    def bower?
+      exist? 'bower.json'
     end
 
-    def attach
-      container.attach(logs: true) do |stream, chunk|
-        case stream
-        when :stdout
-          print chunk
-        when :stderr
-          $stderr.print chunk
-        end
-      end
+    def versions
+      vers = [ 'node --version' ]
+      vers += [ 'npm --version' ] if npm?
+      vers += [ 'bower --version' ] if bower?
+      vers += [ 'grunt --version' ] if grunt?
+      vers
     end
+
+    def exist?(file)
+      File.exist?(File.join(application.path, file))
+    end
+
   end
 end
