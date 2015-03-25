@@ -2,7 +2,6 @@
 
 $LOAD_PATH.unshift File.expand_path('../lib', File.dirname(__FILE__))
 
-require 'builder'
-
+require 'cli'
 $stdout.sync = true
-Builder.new(url: ARGV[0], branch: ARGV[1]).build
+CLI.start

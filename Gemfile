@@ -5,6 +5,7 @@ gem 'addressable'
 gem 'toml-rb'
 gem 'minigit'
 gem 'colorize'
+gem 'thor'
 
 group :test do
   gem 'rspec'
