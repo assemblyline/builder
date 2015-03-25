@@ -12,12 +12,14 @@ class Application
     self.builder = Builder.load_builder(application: self, build: data['build'])
     self.services = Service.build(self, data['test'])
     self.repo = data['application']['repo'] || local_repo
+    self.env = data.fetch('test', {}).fetch('env', {})
   end
 
   attr_reader :builder, :path, :name, :repo, :services
 
   def build
     self.image = builder.build
+    puts "sucessfully assembled #{full_tag}".bold.green
   end
 
   def push
@@ -45,12 +47,12 @@ class Application
   end
 
   def env
-    services.map(&:env).reduce({}, :merge)
+    @env.merge(services.map(&:env).reduce({}, :merge))
   end
 
   protected
 
-  attr_writer :builder, :path, :name, :repo, :services
+  attr_writer :builder, :path, :name, :repo, :services, :env
   attr_accessor :sha, :image
 
   private
