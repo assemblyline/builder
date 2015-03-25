@@ -1,8 +1,8 @@
-module Service
+module Services
   def self.build(application, data)
-    if data && data['service']
-      data['service'].map do |name, options|
-        require "service/#{name.downcase}"
+    if data
+      data.map do |name, options|
+        require "services/#{name.downcase}"
 
         const_get(
           constants.detect { |c| c.to_s.downcase == name.downcase }

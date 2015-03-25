@@ -1,6 +1,6 @@
 require 'docker'
 
-module Service
+module Services
   class Postgres
     def initialize(application:, data:)
       self.application = application
@@ -8,7 +8,8 @@ module Service
     end
 
     def start
-      self.container ||= Docker::Container.create('Image' => 'postgres')
+      pull_image_if_required
+      self.container ||= Docker::Container.create('Image' => image)
       container.start
       wait
       create_database
@@ -27,6 +28,20 @@ module Service
     attr_accessor :application, :data, :container
 
     private
+
+    def pull_image_if_required
+      Docker::Image.get(image)
+    rescue Docker::Error::NotFoundError
+      Docker::Image.create('fromImage' => image) { |c| print c }
+    end
+
+    def image
+      "postgres:#{version}"
+    end
+
+    def version
+      data['version'] || 'latest'
+    end
 
     def database_url
       "postgres://postgres@#{ip}/#{database_name}"

@@ -2,7 +2,6 @@ require 'docker'
 require 'json'
 require 'colorize'
 require 'builder'
-require 'service'
 
 class Application
   def initialize(data, dir, sha)
@@ -10,9 +9,7 @@ class Application
     self.name = data['application']['name']
     self.path = dir
     self.builder = Builder.load_builder(application: self, build: data['build'])
-    self.services = Service.build(self, data['test'])
     self.repo = data['application']['repo'] || local_repo
-    self.env = data.fetch('test', {}).fetch('env', {})
   end
 
   attr_reader :builder, :path, :name, :repo, :services
@@ -38,21 +35,10 @@ class Application
     @_tag ||= "#{sha}_#{timestamp}"
   end
 
-  def start_services
-    services.each(&:start)
-  end
-
-  def stop_services
-    services.each(&:stop)
-  end
-
-  def env
-    @env.merge(services.map(&:env).reduce({}, :merge))
-  end
 
   protected
 
-  attr_writer :builder, :path, :name, :repo, :services, :env
+  attr_writer :builder, :path, :name, :repo
   attr_accessor :sha, :image
 
   private

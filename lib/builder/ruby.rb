@@ -2,6 +2,7 @@ require 'docker'
 require 'erb'
 require 'builder/dockerfile'
 require 'container_runner'
+require 'services'
 
 class Builder
   class Ruby
@@ -10,20 +11,34 @@ class Builder
       self.ruby_version = build['version'] || detect_ruby_version
       self.ignore = build['ignore'] || []
       self.script = build['script']
+      self.services = Services.build(application, build['service'])
+      self.env = build.fetch('env', {})
     end
 
     def build
       dockerfile_build
-      run_tests
+      run_script
       image
     end
 
     protected
 
-    attr_accessor :application, :ruby_version, :image
-    attr_writer :ignore, :script
+    attr_accessor :application, :ruby_version, :image, :services
+    attr_writer :ignore, :script, :env
 
     private
+
+    def start_services
+      services.each(&:start)
+    end
+
+    def stop_services
+      services.each(&:stop)
+    end
+
+    def env
+      @env.merge(services.map(&:env).reduce({}, :merge))
+    end
 
     def exit_if_failed
       return if exit_code == 0
@@ -34,15 +49,15 @@ class Builder
       test_container.json['State']['ExitCode']
     end
 
-    def run_tests
-      application.start_services
+    def run_script
+      start_services
       ContainerRunner.new(
         image: application.full_tag,
         script: script,
-        env: application.env
+        env: env,
       ).run
     ensure
-      application.stop_services
+      stop_services
     end
 
     def script

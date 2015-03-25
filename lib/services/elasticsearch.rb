@@ -1,7 +1,7 @@
 require 'docker'
 require 'net/http'
 
-module Service
+module Services
   class Elasticsearch
     def initialize(application:, data:)
       self.application = application
@@ -9,7 +9,8 @@ module Service
     end
 
     def start
-      self.container ||= Docker::Container.create('Image' => 'elasticsearch')
+      pull_image_if_required
+      self.container ||= Docker::Container.create('Image' => image)
       container.start
       wait
     end
@@ -30,6 +31,20 @@ module Service
 
     def es_url
       "#{ip}:9200"
+    end
+
+    def pull_image_if_required
+      Docker::Image.get(image)
+    rescue Docker::Error::NotFoundError
+      Docker::Image.create('fromImage' => image) { |c| print c }
+    end
+
+    def image
+      "elasticsearch:#{version}"
+    end
+
+    def version
+      data['version'] || 'latest'
     end
 
     def wait

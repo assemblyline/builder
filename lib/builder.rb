@@ -13,17 +13,28 @@ class Builder
     ).new(application: application, build: build)
   end
 
+  def self.local_build(sha:, push: false)
+    dir = '/usr/assemblyline/local'
+    Dir.mktmpdir do |tmpdir|
+      FileUtils.cp_r(dir + '/.', tmpdir, preserve: true)
+      Assemblyfile.load(tmpdir, sha).each do |application|
+        application.build
+        application.push if push
+      end
+    end
+  end
+
   def initialize(url:, branch: nil)
     @url = GitUrl.new url
     @path = path
     @branch = branch
   end
 
-  def build
+  def build(push: false)
     cache.make_working_copy(branch: branch) do |dir, sha|
       Assemblyfile.load(dir, sha).each do |application|
         application.build
-        application.push
+        application.push if push
       end
     end
   end
