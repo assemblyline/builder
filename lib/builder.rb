@@ -13,8 +13,7 @@ class Builder
     ).new(application: application, build: build)
   end
 
-  def self.local_build(sha:, push: false)
-    dir = '/usr/assemblyline/local'
+  def self.local_build(dir: dir, sha:, push: false)
     Dir.mktmpdir do |tmpdir|
       FileUtils.cp_r(dir + '/.', tmpdir, preserve: true)
       Assemblyfile.load(tmpdir, sha).each do |application|

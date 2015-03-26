@@ -11,6 +11,6 @@ class CLI < Thor
   desc 'local_build SHA', 'build from source mounted at /usr/assemblyline/local'
   option :push, type: :boolean, default: false
   def local_build(sha)
-    Builder.local_build(sha: sha, push: options[:push])
+    Builder.local_build(dir: '/usr/assemblyline/local', sha: sha, push: options[:push])
   end
 end

@@ -24,7 +24,8 @@ class Builder
         $stderr.puts json['error']
         exit 1
       end
-      puts json['stream']
+      puts json['stream'] if json['stream']
+      puts json['status'] if json['status']
     end
   end
 end

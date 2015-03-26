@@ -45,7 +45,7 @@ module Services
     def pull_image_if_required
       Docker::Image.get(image)
     rescue Docker::Error::NotFoundError
-      puts "pulling #{service_name} version #{version} image".bold.green
+      puts "pulling #{service_name} version #{version}".bold.green
       Docker::Image.create('fromImage' => image) { print '.' }
     end
 
