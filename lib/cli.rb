@@ -4,7 +4,7 @@ require 'thor'
 class CLI < Thor
   desc 'build GIT_URL', 'build from a git url optionaly merge reg with master'
   option :push, type: :boolean, default: false
-  def build(url, ref=nil)
+  def build(url, ref = nil)
     Builder.new(url: url, branch: ref, push: options[:push]).build
   end
 

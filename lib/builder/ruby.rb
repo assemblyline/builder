@@ -61,7 +61,7 @@ class Builder
     end
 
     def script
-      @script || [ 'bundle exec rake' ]
+      @script || ['bundle exec rake']
     end
 
     def dockerfile_build

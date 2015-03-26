@@ -1,26 +1,16 @@
-require 'docker'
+require 'services/service'
+require 'colorize'
 
 module Services
-  class Postgres
-    def initialize(application:, data:)
-      self.application = application
-      self.data = data
-    end
-
+  class Postgres < Service
     def start
-      pull_image_if_required
-      self.container ||= Docker::Container.create('Image' => image)
-      container.start
+      super
       wait
       create_database
     end
 
     def env
-      { "DATABASE_URL" => database_url }
-    end
-
-    def stop
-      container.delete(force: true)
+      { 'DATABASE_URL' => database_url }
     end
 
     protected
@@ -29,26 +19,13 @@ module Services
 
     private
 
-    def pull_image_if_required
-      Docker::Image.get(image)
-    rescue Docker::Error::NotFoundError
-      Docker::Image.create('fromImage' => image) { |c| print c }
-    end
-
-    def image
-      "postgres:#{version}"
-    end
-
-    def version
-      data['version'] || 'latest'
-    end
-
     def database_url
       "postgres://postgres@#{ip}/#{database_name}"
     end
 
     def create_database
-      container.exec(["psql", "-U", "postgres" , "-c", "CREATE DATABASE #{database_name};"])
+      puts "creating #{database_name} postgres database".bold.green
+      container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"])
     end
 
     def database_name
@@ -56,11 +33,13 @@ module Services
     end
 
     def wait
-      container.exec(["bash", "-c", "while [ ! -S /var/run/postgresql/.s.PGSQL.5432 ]; do sleep 0.1; done"])
-    end
-
-    def ip
-      container.json["NetworkSettings"]["IPAddress"]
+      print 'waiting for postgres service to be up =>'.bold.green
+      container.exec([
+        'bash',
+        '-c',
+        "while [ ! -S /var/run/postgresql/.s.PGSQL.5432 ]; do echo '.'; sleep 0.1; done",
+      ]) { print '.' }
+      puts
     end
   end
 end

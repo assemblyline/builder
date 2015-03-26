@@ -4,3 +4,4 @@ name = 'simple_app'
 [build]
 builder = 'ruby'
 version = '2.1.5'
+script = ['bundle exec rspec']

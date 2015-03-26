@@ -5,7 +5,7 @@ module Services
         require "services/#{name.downcase}"
 
         const_get(
-          constants.detect { |c| c.to_s.downcase == name.downcase }
+          constants.detect { |c| c.to_s.downcase == name.downcase },
         ).new(application: application, data: options)
       end
     else
