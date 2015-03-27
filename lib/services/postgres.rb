@@ -31,11 +31,10 @@ module Services
 
     def create_database_with_retry
       _out, _err, status = container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"])
-      if status == 2
-        print '.'
-        sleep 0.1
-        create_database_with_retry
-      end
+      return unless status == 2
+      print '.'
+      sleep 0.1
+      create_database_with_retry
     end
 
     def database_name
