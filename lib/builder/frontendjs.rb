@@ -10,10 +10,10 @@ class Builder
       self.application = application
       self.script = build['script']
       self.target = File.join(application.path, build['target'] || 'dist')
-      setup_build
     end
 
     def build
+      setup_build
       run_build
       package_target
     end
