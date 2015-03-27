@@ -63,8 +63,8 @@ class Builder
       write 'Dockerfile', "FROM nginx\nCOPY . /usr/share/nginx/html"
     end
 
-    def write(_name, content)
-      file = File.new(File.join(target, 'Dockerfile'), 'w')
+    def write(name, content)
+      file = File.new(File.join(target, name), 'w')
       file.write content
       file.close
     end

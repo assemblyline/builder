@@ -11,6 +11,7 @@ describe Builder::FrontendJS do
 
   let(:container_json) { { 'State' => { 'ExitCode' => 0 } } }
   let(:container) { double(:container, start: nil, attach: nil, json: container_json, delete: nil) }
+  let(:runner) { double(:runner, run: nil) }
 
   before do
     allow(Docker::Image).to receive(:create)
@@ -19,18 +20,16 @@ describe Builder::FrontendJS do
 
   describe 'the build script' do
 
-    xit 'runs the script with bash' do
-      expect(Docker::Container).to receive(:create) do |options|
-        expect(options['Cmd'].first(2)).to eq ['bash', '-xce']
-      end
-      subject
+    before do
+      allow(subject).to receive(:package_target)
     end
 
     it 'cd into the application path' do
       expect(ContainerRunner).to receive(:new) do |args|
         expect(args[:script]).to include "cd #{path}"
+        runner
       end
-      subject
+      subject.build
     end
 
     context 'in an npm project' do
@@ -39,8 +38,9 @@ describe Builder::FrontendJS do
       it 'runs npm install' do
         expect(ContainerRunner).to receive(:new) do |args|
           expect(args[:script]).to include 'npm install'
+          runner
         end
-        subject
+        subject.build
       end
     end
 
@@ -50,8 +50,9 @@ describe Builder::FrontendJS do
       it 'runs bower install' do
         expect(ContainerRunner).to receive(:new) do |args|
           expect(args[:script]).to include 'bower install --allow-root'
+          runner
         end
-        subject
+        subject.build
       end
     end
 
@@ -61,8 +62,9 @@ describe Builder::FrontendJS do
       it 'runs grunt' do
         expect(ContainerRunner).to receive(:new) do |args|
           expect(args[:script]).to include 'grunt'
+          runner
         end
-        subject
+        subject.build
       end
     end
 
@@ -79,8 +81,9 @@ describe Builder::FrontendJS do
             'bower install --allow-root',
             'grunt',
           ]
+          runner
         end
-        subject
+        subject.build
       end
     end
 
@@ -90,8 +93,9 @@ describe Builder::FrontendJS do
       it 'cd into the application path' do
         expect(ContainerRunner).to receive(:new) do |args|
           expect(args[:script]).to include "cd #{path}"
+          runner
         end
-        subject
+        subject.build
       end
 
       it 'uses the script' do
@@ -105,8 +109,9 @@ describe Builder::FrontendJS do
             'echo foo',
             'echo bar',
           ])
+          runner
         end
-        subject
+        subject.build
       end
     end
   end
@@ -117,8 +122,13 @@ describe Builder::FrontendJS do
     let(:runner) { double }
 
     before do
+      FileUtils.mkdir_p(File.join(base_path, 'dist'))
       allow(Docker::Image).to receive(:build_from_dir).and_return(packaged_image)
       allow(ContainerRunner).to receive(:new).and_return(runner)
+    end
+
+    after do
+      FileUtils.rm_rf(File.join(base_path, 'dist'))
     end
 
     it 'starts the build container' do
