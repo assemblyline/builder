@@ -50,10 +50,18 @@ describe Services::Postgres do
     end
   end
 
-  describe 'starting the container' do
+  describe 'starting the service' do
     it 'starts the container' do
       expect(container).to receive(:start)
       subject.start
+    end
+  end
+
+  describe 'stopping the service' do
+    it 'deletes the container' do
+      subject.start
+      expect(container).to receive(:delete).with(force: true)
+      subject.stop
     end
   end
 
@@ -90,15 +98,11 @@ describe Services::Postgres do
     end
 
     context 'error creating database' do
-      let(:wait_command) do
-        ['bash', '-c', "while [ ! -S /var/run/postgresql/.s.PGSQL.5432 ]; do echo '.'; sleep 0.1; done"]
-      end
       let(:startup_error) { [[], ["psql: FATAL:  the database system is starting up\n"], 2] }
       let(:exists_error) { [[], ["ERROR:  database \"foo_bar_app_test\" already exists\n"], 1] }
 
       context 'when there is a startup error' do
         it 'retries until the database is created' do
-          expect(container).to receive(:exec).with(wait_command)
           expect(container).to receive(:exec).with(create_database_cmd).exactly(3).times
             .and_return(startup_error, startup_error, standard_response)
           subject.start
@@ -107,7 +111,6 @@ describe Services::Postgres do
 
       context 'when the database allready exists' do
         it 'does not retry futher' do
-          expect(container).to receive(:exec).with(wait_command)
           expect(container).to receive(:exec).with(create_database_cmd).exactly(2).times
             .and_return(startup_error, exists_error)
           subject.start

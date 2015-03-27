@@ -5,7 +5,6 @@ module Services
   class Postgres < Service
     def start
       super
-      wait
       create_database
     end
 
@@ -39,16 +38,6 @@ module Services
 
     def database_name
       data['database_name'] || "#{application.name.downcase.split.join('_')}_test"
-    end
-
-    def wait
-      print 'waiting for postgres service to be up =>'.bold.green
-      container.exec([
-        'bash',
-        '-c',
-        "while [ ! -S /var/run/postgresql/.s.PGSQL.5432 ]; do echo '.'; sleep 0.1; done",
-      ]) { print '.' }
-      puts
     end
   end
 end
