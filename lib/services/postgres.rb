@@ -25,7 +25,7 @@ module Services
 
     def create_database
       puts "creating #{database_name} postgres database".bold.green
-      container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"])
+      puts container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"]).inspect
     end
 
     def database_name
