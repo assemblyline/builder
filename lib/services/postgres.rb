@@ -24,8 +24,18 @@ module Services
     end
 
     def create_database
-      puts "creating #{database_name} postgres database".bold.green
-      puts container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"]).inspect
+      print "creating #{database_name} postgres database".bold.green
+      create_database_with_retry
+      puts
+    end
+
+    def create_database_with_retry
+      _out, _err, status = container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"])
+      if status == 2
+        print '.'
+        sleep 0.1
+        create_database_with_retry
+      end
     end
 
     def database_name

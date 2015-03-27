@@ -17,3 +17,6 @@ RSpec.configure do |config|
     `git config --global push.default simple`
   end
 end
+
+require 'excon'
+Excon.defaults[:ssl_verify_peer] = false
