@@ -1,5 +1,6 @@
 require 'services/service'
 require 'colorize'
+require 'log'
 
 module Services
   class Postgres < Service
@@ -23,15 +24,15 @@ module Services
     end
 
     def create_database
-      print "creating #{database_name} postgres database".bold.green
+      Log.out.print "creating #{database_name} postgres database".bold.green
       create_database_with_retry
-      puts
+      Log.out.puts
     end
 
     def create_database_with_retry
       _out, _err, status = container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"])
       return unless status == 2
-      print '.'
+      Log.out.print '.'
       sleep 0.1
       create_database_with_retry
     end

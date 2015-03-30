@@ -1,5 +1,6 @@
 require 'docker'
 require 'patch/rubygems'
+require 'log'
 
 class Builder
   class Dockerfile
@@ -21,11 +22,11 @@ class Builder
     def format_build_status(chunk)
       json = JSON.parse(chunk)
       if json['error']
-        $stderr.puts json['error']
+        Log.err.puts json['error']
         exit 1
       end
-      puts json['stream'] if json['stream']
-      puts json['status'] if json['status']
+      Log.out.puts json['stream'] if json['stream']
+      Log.out.puts json['status'] if json['status']
     end
   end
 end

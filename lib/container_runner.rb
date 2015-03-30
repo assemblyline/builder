@@ -1,4 +1,5 @@
 require 'docker'
+require 'log'
 
 class ContainerRunner
   def initialize(image:, script:, env: {})
@@ -43,11 +44,11 @@ class ContainerRunner
     container.attach(logs: true) do |stream, chunk|
       case stream
       when :stdout
-        print chunk
+        Log.out.print chunk
       when :stderr
-        $stderr.print chunk
+        Log.err.print chunk
       else
-        $stderr.print "#{stream}: #{chunk}"
+        Log.err.print "#{stream}: #{chunk}"
       end
     end
   end

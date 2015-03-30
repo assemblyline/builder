@@ -1,5 +1,6 @@
 require 'docker'
 require 'colorize'
+require 'log'
 
 module Services
   class Service
@@ -11,7 +12,7 @@ module Services
     def start
       pull_image_if_required
       self.container ||= Docker::Container.create('Image' => image)
-      puts "starting #{service_name} service".bold.green
+      Log.out.puts "starting #{service_name} service".bold.green
       container.start
     end
 
@@ -20,7 +21,7 @@ module Services
     end
 
     def stop
-      puts "stopping #{service_name} service".bold.green
+      Log.out.puts "stopping #{service_name} service".bold.green
       container.delete(force: true)
     end
 
@@ -45,8 +46,8 @@ module Services
     def pull_image_if_required
       Docker::Image.get(image)
     rescue Docker::Error::NotFoundError
-      puts "pulling #{service_name} version #{version}".bold.green
-      Docker::Image.create('fromImage' => image) { print '.' }
+      Log.out.puts "pulling #{service_name} version #{version}".bold.green
+      Docker::Image.create('fromImage' => image) { Log.out.print '.' }
     end
 
     def ip

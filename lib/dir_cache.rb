@@ -2,6 +2,7 @@ require 'fileutils'
 require 'digest/sha1'
 require 'tmpdir'
 require 'colorize'
+require 'log'
 
 class DirCache
   def initialize(path:, config:, dirname:)
@@ -12,13 +13,13 @@ class DirCache
 
   def prime
     return unless config?
-    puts "priming #{dirname} cache from #{cache_path}".bold.green
+    Log.out.puts "priming #{dirname} cache from #{cache_path}".bold.green
     copy(cache_path, install_path)
   end
 
   def save
     return unless config?
-    puts "saving #{dirname} cache to #{cache_path}".bold.green
+    Log.out.puts "saving #{dirname} cache to #{cache_path}".bold.green
     copy(install_path, cache_path)
   end
 

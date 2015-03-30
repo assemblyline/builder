@@ -16,7 +16,7 @@ describe GitRepo do
   describe '#fetch' do
     it 'calls the MiniGit fetch method' do
       git = double
-      allow(MiniGit).to receive(:new).with(Dir.pwd).and_return(git)
+      allow(MiniGit::Capturing).to receive(:new).with(Dir.pwd).and_return(git)
       expect(git).to receive(:fetch)
       subject.fetch
     end
@@ -24,7 +24,7 @@ describe GitRepo do
 
   describe '.clone' do
     it 'calls the MiniGit clone method' do
-      expect(MiniGit).to receive(:git).with(:clone, 'f0000', 'B4arr')
+      expect(MiniGit::Capturing).to receive(:git).with(:clone, 'f0000', 'B4arr')
       described_class.clone 'f0000', 'B4arr'
     end
   end

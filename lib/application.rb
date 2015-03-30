@@ -2,6 +2,7 @@ require 'docker'
 require 'json'
 require 'colorize'
 require 'builder'
+require 'log'
 
 class Application
   def initialize(data, dir, sha)
@@ -16,12 +17,12 @@ class Application
 
   def build
     self.image = builder.build
-    puts "sucessfully assembled #{full_tag}".bold.green
+    Log.out.puts "sucessfully assembled #{full_tag}".bold.green
   end
 
   def push
     if @local_repo
-      $stderr.puts 'no repo specified in config only building project localy'
+      Log.err.puts 'no repo specified in config only building project localy'
     else
       push_image
     end
@@ -45,7 +46,7 @@ class Application
 
   def push_image
     auth_docker
-    puts "pushing #{full_tag} =>".bold.green
+    Log.out.puts "pushing #{full_tag} =>".bold.green
     image.push { |chunk| format_push_status(chunk) }
   end
 
@@ -69,17 +70,17 @@ class Application
   def output_status(status)
     case status
     when 'Pushing', 'Buffering to disk'
-      print '.'
+      Log.out.print '.'
     when 'Image successfully pushed'
-      puts "\n" + status
+      Log.out.puts "\n" + status
     else
-      puts status
+      Log.out.puts status
     end
   end
 
   def output_error(error)
     return unless error
-    $stderr.puts error
+    Log.err.puts error
     exit 1
   end
 
