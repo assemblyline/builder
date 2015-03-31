@@ -6,6 +6,7 @@ gem 'toml-rb'
 gem 'minigit'
 gem 'colorize'
 gem 'thor'
+gem 'serverspec'
 
 group :test do
   gem 'rspec'

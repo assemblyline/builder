@@ -31,9 +31,9 @@ class Builder
 
   def build(push: false)
     cache.make_working_copy(branch: branch) do |dir, sha|
-      Assemblyfile.load(dir, sha).each do |application|
-        application.build
-        application.push if push
+      Assemblyfile.load(dir, sha).each do |assembly|
+        assembly.build
+        assembly.push if push
       end
     end
   end

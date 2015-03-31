@@ -2,6 +2,8 @@ require 'simplecov'
 require 'codeclimate-test-reporter'
 require 'pry'
 require 'log'
+require 'excon'
+Excon.defaults[:ssl_verify_peer] = false
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,

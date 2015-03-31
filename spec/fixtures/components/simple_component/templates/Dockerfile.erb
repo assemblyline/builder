@@ -1,0 +1,5 @@
+FROM quay.io/assemblyline/ubuntu:14.04.2
+
+ENV FOO="<%= data['foo'] %>"
+ENV AWESOME=very
+COPY config.yml config.yml

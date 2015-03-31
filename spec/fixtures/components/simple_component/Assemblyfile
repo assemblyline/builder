@@ -1,0 +1,15 @@
+[component]
+name = 'Test Component'
+repo = 'quay.io/assemblyline/test_component'
+
+[[component.version]]
+version = '0.0.1'
+foo     = 'version one'
+
+[[component.version]]
+version = '0.0.2'
+foo     = 'version two'
+
+[[component.version]]
+version = '0.0.3'
+foo     = 'version three'

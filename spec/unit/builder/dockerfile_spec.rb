@@ -8,7 +8,7 @@ describe Builder::Dockerfile do
 
   describe 'doing the docker build' do
     it 'returns a built and tagged image' do
-      expect(Docker::Image).to receive(:build_from_dir).with('/foo/bar').and_return(image)
+      expect(Docker::Image).to receive(:build_from_dir).with('/foo/bar', 'pull' => true).and_return(image)
       expect(image).to receive(:tag).with('repo' => 'foo.com/foo/bar', 'tag' => 'taaaGGGGG', 'force' => true)
       expect(subject.build).to eq image
     end
@@ -21,7 +21,7 @@ describe Builder::Dockerfile do
       end
 
       it 'uses the passes in path rather than the application path' do
-        expect(Docker::Image).to receive(:build_from_dir).with('/some/other/path').and_return(image)
+        expect(Docker::Image).to receive(:build_from_dir).with('/some/other/path', 'pull' => true).and_return(image)
         subject.build
       end
     end

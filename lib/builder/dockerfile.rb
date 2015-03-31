@@ -10,7 +10,7 @@ class Builder
     end
 
     def build
-      image = Docker::Image.build_from_dir(path) { |chunk| format_build_status(chunk) }
+      image = Docker::Image.build_from_dir(path, 'pull' => true) { |chunk| format_build_status(chunk) }
       image.tag('repo' => application.repo, 'tag' => application.tag, 'force' => true)
       image
     end
