@@ -70,8 +70,12 @@ class Builder
     end
 
     def write_config
-      File.write(path('Dockerfile'), ERB.new(File.read(dockerfile_template)).result(binding))
-      File.write(path('.dockerignore'), ignore.join("\n"))
+      write('Dockerfile', ERB.new(File.read(dockerfile_template)).result(binding))
+      write('.dockerignore', ignore.join("\n"))
+    end
+
+    def write(filename, content)
+      File.write(path(filename), content) unless File.exist? path(filename)
     end
 
     def dockerfile_template
@@ -83,13 +87,12 @@ class Builder
     end
 
     def ignore
-      @ignore + ['.git']
+      @ignore + ['.git', 'Dockerfile', 'Assemblyfile']
     end
 
     def detect_ruby_version
-      config_path = File.join(application.path, '.ruby-version')
-      return 'latest' unless File.exist? config_path
-      File.read(config_path).chomp
+      return 'latest' unless File.exist? path('.ruby-version')
+      File.read(path('.ruby-version')).chomp
     end
   end
 end

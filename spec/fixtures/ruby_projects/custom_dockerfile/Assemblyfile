@@ -1,0 +1,7 @@
+[application]
+name = 'ruby with custom dockerfile'
+
+[build]
+builder = 'ruby'
+version = '2.1.5'
+script = ['echo $CUSTOM_BUILD']

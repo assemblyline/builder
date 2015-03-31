@@ -105,6 +105,6 @@ class Application
   end
 
   def local_repo
-    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/, '')
+    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/, '_')
   end
 end

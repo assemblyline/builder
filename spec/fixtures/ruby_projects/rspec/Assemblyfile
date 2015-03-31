@@ -1,5 +1,5 @@
 [application]
-name = 'simple_app'
+name = 'Simple App'
 
 [build]
 builder = 'ruby'

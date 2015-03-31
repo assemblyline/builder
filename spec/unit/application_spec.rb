@@ -91,7 +91,7 @@ describe Application do
       end
 
       it 'does not push the local image' do
-        expect(subject.repo).to eq 'theworldsbestwebappii'
+        expect(subject.repo).to eq 'the_worlds_best_webapp_ii'
         subject.push
       end
     end
