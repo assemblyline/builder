@@ -12,11 +12,15 @@ module Services
       { 'ES_URL' => es_url }
     end
 
-    protected
-
-    attr_accessor :application, :data, :container
-
     private
+
+    def command
+      ['elasticsearch'] + properties
+    end
+
+    def properties
+      data.fetch('properties', []).map { |p| "-D#{p}" }
+    end
 
     def es_url
       "#{ip}:9200"

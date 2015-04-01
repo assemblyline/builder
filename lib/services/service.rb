@@ -11,7 +11,7 @@ module Services
 
     def start
       pull_image_if_required
-      self.container ||= Docker::Container.create('Image' => image)
+      self.container ||= Docker::Container.create('Image' => image, 'Cmd' => command)
       Log.out.puts "starting #{service_name} service".bold.green
       container.start
     end
@@ -30,6 +30,10 @@ module Services
     attr_accessor :application, :data, :container
 
     private
+
+    def command
+      nil
+    end
 
     def service_name
       self.class.name.split('::').last.downcase

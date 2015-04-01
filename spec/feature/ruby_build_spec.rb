@@ -16,7 +16,7 @@ describe 'Building Ruby Apps' do
   end
 
   context 'a rails app with postgres db' do
-    it 'can build the app app' do
+    it 'can build the app' do
       Builder.local_build(dir: 'spec/fixtures/ruby_projects/rails_example', sha: 'thisisasha')
       expect(Log.out.string).to include 'creating example_rails_app_test postgres database'
       expect(Log.out.string).to include 'sucessfully assembled example_rails_app:thisisasha'
