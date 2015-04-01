@@ -8,7 +8,7 @@ class Assembly
   attr_reader :builder, :path, :name, :repo
 
   def build
-    self.image = builder.build
+    self.images = [builder.build]
     Log.out.puts "sucessfully assembled #{full_tag}".bold.green
   end
 
@@ -32,14 +32,16 @@ class Assembly
   protected
 
   attr_writer :builder, :path, :name, :repo
-  attr_accessor :sha, :image
+  attr_accessor :sha, :images
 
   private
 
   def push_image
     auth_docker
-    Log.out.puts "pushing #{full_tag} =>".bold.green
-    image.push { |chunk| format_push_status(chunk) }
+    images.each do |image|
+      Log.out.puts "pushing #{image.info['RepoTags'].first} =>".bold.green
+      image.push { |chunk| format_push_status(chunk) }
+    end
   end
 
   def auth_docker

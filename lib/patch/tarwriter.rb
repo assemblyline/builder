@@ -1,3 +1,5 @@
+require 'rubygems/package'
+
 module Gem
   class Package
     class TarWriter

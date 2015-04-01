@@ -1,5 +1,5 @@
 require 'docker'
-require 'patch/rubygems'
+require 'patch/tarwriter'
 require 'log'
 
 class Builder

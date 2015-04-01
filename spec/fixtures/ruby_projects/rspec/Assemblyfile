@@ -1,5 +1,6 @@
 [application]
 name = 'Simple App'
+repo = 'quay.io/assemblyline/ruby_sample'
 
 [build]
 builder = 'ruby'

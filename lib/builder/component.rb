@@ -3,7 +3,6 @@ require 'builder/component/version'
 class Builder
   class Component
     def initialize(component:, versions:)
-      self.component = component
       self.versions = Version.versions(component: component, versions: versions)
     end
 
@@ -13,7 +12,7 @@ class Builder
 
     protected
 
-    attr_accessor :component, :versions
+    attr_accessor :versions
 
   end
 end

@@ -14,8 +14,4 @@ class Component < Assembly
     self.images = builder.build
   end
 
-  private
-
-  attr_accessor :images
-
 end

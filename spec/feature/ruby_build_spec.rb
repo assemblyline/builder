@@ -5,7 +5,7 @@ describe 'Building Ruby Apps' do
   context 'a simple app' do
     it 'can build a passing rspec app' do
       Builder.local_build(dir: 'spec/fixtures/ruby_projects/rspec', sha: 'thisisasha')
-      expect(Log.out.string).to include 'sucessfully assembled simple_app:thisisasha'
+      expect(Log.out.string).to include 'sucessfully assembled quay.io/assemblyline/ruby_sample:thisisasha'
     end
 
     it 'exits from a failing rspec app' do

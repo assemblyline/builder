@@ -61,7 +61,7 @@ describe Application do
   end
 
   describe '#push' do
-    let(:image) { double }
+    let(:image) { double(info: { 'RepoTags' => ["#{subject.repo}:#{subject.tag}"] }) }
 
     before do
       ENV['DOCKERCFG'] = "{\"https://index.docker.io/v1/\":{\"auth\":\"ZXJybTpwYXNzd29yZA\",\"email\":\"ed@reevoo.com\"}}" # rubocop:disable Metrics/LineLength

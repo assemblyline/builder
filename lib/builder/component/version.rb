@@ -19,7 +19,7 @@ class Builder
       def build
         write_config
         dockerfile_build
-        spec(image)
+        spec
         image
       end
 
