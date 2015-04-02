@@ -32,8 +32,12 @@ describe 'Simple Component' do
       end
     end
 
-    it 'is awesome', :'0.0.2', :'0.0.3' do
+    it 'is awesome', :'0.0.2' do
       expect(env['AWESOME']).to eq 'very'
+    end
+
+    it 'is super awesome', :'0.0.3' do
+      expect(env['AWESOME']).to eq 'super'
     end
 
     it 'has a FOO', :'0.0.2' do

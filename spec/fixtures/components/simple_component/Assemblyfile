@@ -13,3 +13,4 @@ foo     = 'version two'
 [[component.version]]
 version = '0.0.3'
 foo     = 'version three'
+template = 'super-awesome'
