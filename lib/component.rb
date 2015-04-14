@@ -6,7 +6,7 @@ class Component < Assembly
     self.sha = sha
     self.name = data['component']['name']
     self.path = dir
-    self.builder = Builder::Component.new(component: self, versions: data['component']['version'])
+    self.builder = Builder::Component.new(component: self, versions: data['version'])
     self.repo = data['component'].fetch('repo')
   end
 
