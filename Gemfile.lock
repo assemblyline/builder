@@ -12,10 +12,10 @@ GEM
     colorize (0.7.5)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    docker-api (1.20.0)
+    docker-api (1.21.0)
       excon (>= 0.38.0)
       json
-    excon (0.44.4)
+    excon (0.45.1)
     json (1.8.2)
     method_source (0.8.2)
     minigit (0.0.4)
