@@ -49,7 +49,7 @@ describe Builder::FrontendJS do
 
       it 'runs bower install' do
         expect(ContainerRunner).to receive(:new) do |args|
-          expect(args[:script]).to include 'bower install --allow-root'
+          expect(args[:script]).to include 'bower update --allow-root'
           runner
         end
         subject.build
@@ -78,7 +78,7 @@ describe Builder::FrontendJS do
             'bower --version',
             'grunt --version',
             'npm install',
-            'bower install --allow-root',
+            'bower update --allow-root',
             'grunt',
           ]
           runner

@@ -93,7 +93,7 @@ class Builder
 
     def bower
       return [] unless bower?
-      ['bower install --allow-root']
+      ['bower update --allow-root']
     end
 
     def bower?
