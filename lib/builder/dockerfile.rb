@@ -10,6 +10,7 @@ class Builder
     end
 
     def build
+      set_read_timeout
       image = Docker::Image.build_from_dir(path, 'pull' => true) { |chunk| format_build_status(chunk) }
       image.tag('repo' => application.repo, 'tag' => application.tag, 'force' => true)
       image
@@ -18,6 +19,10 @@ class Builder
     protected
 
     attr_accessor :application, :path
+
+    def set_read_timeout
+      Excon.defaults[:read_timeout] = 360
+    end
 
     def format_build_status(chunk)
       json = JSON.parse(chunk)

@@ -14,7 +14,6 @@ class Builder
   end
 
   def self.local_build(dir: dir, sha:, push: false)
-    Excon.defaults[:read_timeout] = 360
     Dir.mktmpdir do |tmpdir|
       FileUtils.cp_r(dir + '/.', tmpdir, preserve: true)
       Assemblyfile.load(tmpdir, sha).each do |application|
@@ -31,7 +30,6 @@ class Builder
   end
 
   def build(push: false)
-    set_read_timeout
     cache.make_working_copy(branch: branch) do |dir, sha|
       Assemblyfile.load(dir, sha).each do |assembly|
         assembly.build
@@ -44,10 +42,6 @@ class Builder
 
   def cache
     GitCache.new(url)
-  end
-
-  def set_read_timeout
-    Excon.defaults[:read_timeout] = 360
   end
 
   attr_reader :url, :path, :branch
