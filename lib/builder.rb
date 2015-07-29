@@ -14,6 +14,7 @@ class Builder
   end
 
   def self.local_build(dir: dir, sha:, push: false)
+    Excon.defaults[:read_timeout] = 360
     Dir.mktmpdir do |tmpdir|
       FileUtils.cp_r(dir + '/.', tmpdir, preserve: true)
       Assemblyfile.load(tmpdir, sha).each do |application|
