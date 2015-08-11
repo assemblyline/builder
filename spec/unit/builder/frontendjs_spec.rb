@@ -13,10 +13,13 @@ describe Builder::FrontendJS do
   let(:container) { double(:container, start: nil, attach: nil, json: container_json, delete: nil) }
   let(:runner) { double(:runner, run: nil) }
 
+  let(:cache) { double(DirCache, prime: nil, save: nil) }
+
   before do
     allow(Docker::Image).to receive(:create)
     allow(Docker::Container).to receive(:create).and_return(container)
   end
+
 
   describe 'the build script' do
 
@@ -42,6 +45,23 @@ describe Builder::FrontendJS do
         end
         subject.build
       end
+
+      it 'primes the npm cache' do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        expect(DirCache).to receive(:new)
+          .with(path: path, config: 'package.json', dirname: 'node_modules')
+          .and_return(cache)
+        expect(cache).to receive(:prime)
+        subject.build
+      end
+
+      it 'saves the npm cache' do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        expect(DirCache).to receive(:new)
+          .and_return(cache)
+        expect(cache).to receive(:save)
+        subject.build
+      end
     end
 
     context 'in a bower project' do
@@ -50,6 +70,79 @@ describe Builder::FrontendJS do
       it 'runs bower install' do
         expect(ContainerRunner).to receive(:new) do |args|
           expect(args[:script]).to include 'bower update --allow-root'
+          runner
+        end
+        subject.build
+      end
+
+      it 'primes the bower cache' do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        expect(DirCache).to receive(:new)
+          .with(path: path, config: 'bower.json', dirname: 'bower_components')
+          .and_return(cache)
+        expect(cache).to receive(:prime)
+        subject.build
+      end
+
+      it 'saves the bower cache' do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        expect(DirCache).to receive(:new)
+          .and_return(cache)
+        expect(cache).to receive(:save)
+        subject.build
+      end
+    end
+
+    context 'in a jspm project' do
+      let(:path) { "#{base_path}/jspm" }
+
+      it 'runs jspm install' do
+        expect(ContainerRunner).to receive(:new) do |args|
+          expect(args[:script]).to include 'jspm install'
+          runner
+        end
+        subject.build
+      end
+
+      it 'runs npm before jspm' do
+        expect(ContainerRunner).to receive(:new) do |args|
+          expect(args[:script].index('npm install') < args[:script].index('jspm install')).to be_truthy
+          runner
+        end
+        subject.build
+      end
+
+      it 'primes the jspm cache' do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        allow(DirCache).to receive(:new).and_return(double(prime: nil, save: nil))
+        expect(DirCache).to receive(:new)
+          .with(path: path, config: 'config.js', dirname: 'jspm_packages')
+          .and_return(cache)
+        expect(cache).to receive(:prime)
+        subject.build
+      end
+
+      it 'saves the jspm cache' do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        allow(DirCache).to receive(:new).and_return(double(prime: nil, save: nil))
+        expect(DirCache).to receive(:new)
+          .with(path: path, config: 'config.js', dirname: 'jspm_packages')
+          .and_return(cache)
+        expect(cache).to receive(:save)
+        subject.build
+      end
+
+      it 'runs the expected commands in sequence' do
+        expect(ContainerRunner).to receive(:new) do |args|
+          expect(args[:script]).to eq [
+            "cd #{path}",
+            'node --version',
+            'npm --version',
+            'jspm --version',
+            'npm install',
+            'jspm install',
+            'grunt',
+          ]
           runner
         end
         subject.build
@@ -76,7 +169,6 @@ describe Builder::FrontendJS do
             'node --version',
             'npm --version',
             'bower --version',
-            'grunt --version',
             'npm install',
             'bower update --allow-root',
             'grunt',
@@ -105,13 +197,29 @@ describe Builder::FrontendJS do
             'node --version',
             'npm --version',
             'bower --version',
-            'grunt --version',
+            'npm install',
+            'bower update --allow-root',
             'echo foo',
             'echo bar',
           ])
           runner
         end
         subject.build
+      end
+    end
+
+    describe 'the install script' do
+      context 'when the install script is overridden' do
+        let(:build) { { 'install' => ['echo hello'] } }
+
+        it 'runs the given script rather than a generated one' do
+          expect(ContainerRunner).to receive(:new) do |args|
+            expect(args[:script]).to include 'echo hello'
+            expect(args[:script]).to_not include 'npm install'
+            runner
+          end
+          subject.build
+        end
       end
     end
   end

@@ -1,14 +1,15 @@
 require 'colorize'
 require 'docker'
 require 'builder/dockerfile'
+require 'builder/frontendjs/install'
 require 'container_runner'
-require 'dir_cache'
 
 class Builder
   class FrontendJS
     def initialize(application:, build:)
       self.application = application
       self.script = build['script']
+      self.install = build['install']
       self.target = File.join(application.path, build['target'] || 'dist')
     end
 
@@ -20,27 +21,13 @@ class Builder
 
     protected
 
-    attr_accessor :application, :target, :container
+    attr_accessor :application, :target, :container, :install
     attr_writer :script
 
     private
 
-    attr_accessor :caches
-
-    def prime_cache
-      self.caches = [
-        DirCache.new(path: application.path, config: 'package.json', dirname: 'node_modules'),
-        DirCache.new(path: application.path, config: 'bower.json', dirname: 'bower_components'),
-      ]
-      caches.each(&:prime)
-    end
-
-    def save_cache
-      caches.each(&:save)
-    end
-
     def setup_build
-      prime_cache
+      prepare_install
       self.container = ContainerRunner.new(
         image: 'quay.io/assemblyline/builder-frontendjs',
         script: script,
@@ -48,9 +35,13 @@ class Builder
       )
     end
 
+    def prepare_install
+      self.install = Install.new(script: install, path: application.path)
+    end
+
     def run_build
       container.run
-      save_cache
+      install.save_caches
     end
 
     def package_target
@@ -70,7 +61,7 @@ class Builder
     end
 
     def script
-      ["cd #{application.path}"] + (versions + (@script || npm + bower + grunt))
+      ["cd #{application.path}"] + (install.script + (@script || grunt))
     end
 
     def grunt
@@ -82,35 +73,8 @@ class Builder
       exist? 'Gruntfile.js'
     end
 
-    def npm
-      return [] unless npm?
-      ['npm install']
-    end
-
-    def npm?
-      exist? 'package.json'
-    end
-
-    def bower
-      return [] unless bower?
-      ['bower update --allow-root']
-    end
-
-    def bower?
-      exist? 'bower.json'
-    end
-
-    def versions
-      vers = ['node --version']
-      vers += ['npm --version'] if npm?
-      vers += ['bower --version'] if bower?
-      vers += ['grunt --version'] if grunt?
-      vers
-    end
-
     def exist?(file)
       File.exist?(File.join(application.path, file))
     end
-
   end
 end
