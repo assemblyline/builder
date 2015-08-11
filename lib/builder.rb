@@ -17,6 +17,7 @@ class Builder
     Dir.mktmpdir do |tmpdir|
       FileUtils.cp_r(dir + '/.', tmpdir, preserve: true)
       Assemblyfile.load(tmpdir, sha).each do |application|
+        Log.out.puts " Building #{application.name} ".black.on_yellow.underline.bold
         application.build
         application.push if push
       end
