@@ -4,15 +4,15 @@ module Assemblyfile
   extend self
 
   def load(dir, sha)
-    app_dirs(dir).map do |app_dir|
-      to_assembly(app_dir, sha)
+    assemblyfiles(dir).map do |assemblyfile, app_dir|
+      to_assembly(assemblyfile, app_dir, sha)
     end
   end
 
   private
 
-  def to_assembly(dir, sha)
-    data = get_data(dir)
+  def to_assembly(assemblyfile, dir, sha)
+    data = get_data(assemblyfile)
     if data['application']
       require 'application'
       Application.new(data, dir, sha)
@@ -22,11 +22,11 @@ module Assemblyfile
     end
   end
 
-  def get_data(dir)
-    TOML.load_file(File.join(dir, 'Assemblyfile'))
+  def get_data(path)
+    TOML.load_file(path)
   end
 
-  def app_dirs(dir)
-    Dir[dir + '/**/Assemblyfile'].sort.map { |file| File.dirname(file) }
+  def assemblyfiles(dir)
+    Dir[dir + '/**/Assemblyfile*'].sort.map { |file| [file, File.dirname(file)] }
   end
 end
