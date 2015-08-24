@@ -1,11 +1,18 @@
 language: ruby
 cache: bundler
-sudo: false
+sudo: required
 before_script:
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
   - git config --global push.default simple
-script: bundle exec rake travis
+  - source .travis/start_docker.sh
+  - docker -v
+  - docker pull quay.io/assemblyline/ubuntu:14.04.2
+  - docker pull quay.io/assemblyline/ruby:2.1.5
+  - docker pull quay.io/assemblyline/ruby:2.2.1
+  - docker pull postgres:9.4.1
+script:
+  - bundle exec rake
 addons:
   code_climate:
     repo_token: 50e550bf7566d9ba05d4fc103159b9077552447a931038461f5e08e8a56b4695

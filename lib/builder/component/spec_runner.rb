@@ -11,7 +11,7 @@ class Builder
       end
 
       def run
-        reset_rspec!(version.image)
+        reset_rspec!(version.image.id)
         exit_code = RSpec::Core::Runner.run(spec_command, Log.err, Log.out)
         exit exit_code unless exit_code == 0
       end
@@ -20,12 +20,12 @@ class Builder
 
       attr_accessor :version, :versions, :path
 
-      def reset_rspec!(image)
+      def reset_rspec!(image_id)
         Specinfra::Backend::Docker.instance_variable_set(:@instance, nil)
         RSpec.reset
         RSpec.configuration.before(:all) do
           set :backend, :docker
-          set :docker_image, image.id
+          set :docker_image, image_id
         end
       end
 
