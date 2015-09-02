@@ -21,7 +21,7 @@ class Builder
     attr_accessor :application, :path
 
     def set_read_timeout
-      Excon.defaults[:read_timeout] = 360
+      Excon.defaults[:read_timeout] = 1000
     end
 
     def format_build_status(chunk)

@@ -29,10 +29,10 @@ end
 module Log
   extend self
 
-  attr_reader :out, :err
+  #attr_reader :out, :err
 
   def reset!
-    @out = StringIO.new
-    @err = StringIO.new
+    #@out = StringIO.new
+    #@err = StringIO.new
   end
 end
