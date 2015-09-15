@@ -9,9 +9,9 @@ class Builder
       self.path = path || application.path
     end
 
-    def build
+    def build(opts = {})
       set_read_timeout
-      image = Docker::Image.build_from_dir(path, 'pull' => true) { |chunk| format_build_status(chunk) }
+      image = Docker::Image.build_from_dir(path, opts.merge('pull' => true)) { |chunk| format_build_status(chunk) }
       image.tag('repo' => application.repo, 'tag' => application.tag, 'force' => true)
       image
     end
