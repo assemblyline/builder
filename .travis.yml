@@ -1,12 +1,12 @@
 language: ruby
 cache: bundler
 sudo: required
+services:
+  - docker
 before_script:
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
   - git config --global push.default simple
-  - source .travis/start_docker.sh
-  - docker -v
   - docker pull quay.io/assemblyline/ubuntu:14.04.2
   - docker pull quay.io/assemblyline/ruby:2.1.5
   - docker pull quay.io/assemblyline/ruby:2.2.1

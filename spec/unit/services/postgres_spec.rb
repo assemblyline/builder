@@ -59,6 +59,7 @@ describe Services::Postgres do
 
   describe 'stopping the service' do
     it 'deletes the container' do
+      allow(Features).to receive(:kill?).and_return(true)
       subject.start
       expect(container).to receive(:delete).with(force: true)
       subject.stop

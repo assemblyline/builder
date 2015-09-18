@@ -40,7 +40,22 @@ module Log
   end
 
   def reset!
+    puts ''
     @out = StringIO.new
     @err = StringIO.new
+  end
+end
+
+def with_env(env)
+  old_env = {}
+  env.each do |var, val|
+    old_env[var] = ENV[var]
+    ENV[var] = val
+  end
+
+  yield
+
+  old_env.each do |var, val|
+    ENV[var] = val
   end
 end
