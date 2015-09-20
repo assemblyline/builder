@@ -1,6 +1,7 @@
 require 'docker'
 require 'colorize'
 require 'log'
+require 'features'
 
 module Services
   class Service
@@ -22,7 +23,7 @@ module Services
 
     def stop
       Log.out.puts "stopping #{service_name} service".bold.green
-      container.delete(force: true)
+      container.delete(force: true) if Features.kill?
     end
 
     protected
