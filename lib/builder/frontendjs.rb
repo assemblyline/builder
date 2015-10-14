@@ -10,6 +10,7 @@ class Builder
       self.application = application
       self.script = build['script']
       self.install = build['install']
+      self.node_version = build['version'] || '0.12.0'
       self.target = File.join(application.path, build['target'] || 'dist')
     end
 
@@ -21,7 +22,7 @@ class Builder
 
     protected
 
-    attr_accessor :application, :target, :container, :install
+    attr_accessor :application, :target, :container, :install, :node_version
     attr_writer :script
 
     private
@@ -29,7 +30,7 @@ class Builder
     def setup_build
       prepare_install
       self.container = ContainerRunner.new(
-        image: 'quay.io/assemblyline/builder-frontendjs',
+        image: "quay.io/assemblyline/builder-frontendjs:#{node_version}",
         script: script,
         env: { 'SSH_KEY' => ENV['SSH_KEY'] },
       )
