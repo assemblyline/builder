@@ -37,10 +37,10 @@ module Services
       return unless data['bucket_types']
       data['bucket_types'].each do |bucket_type|
         Log.out.puts "creating riak bucket type: #{bucket_type}"
-        _out, _err, status = container.exec(['riak-admin', 'bucket-type', 'create', bucket_type])
-        fail unless status == 0
-        _out, _err, status = container.exec(['riak-admin', 'bucket-type', 'activate', bucket_type])
-        fail unless status == 0
+        %w(create activate).each do |action|
+          _out, _err, status = container.exec(['riak-admin', 'bucket-type', action, bucket_type])
+          fail unless status == 0
+        end
       end
     end
 
