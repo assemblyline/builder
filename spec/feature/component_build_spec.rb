@@ -4,7 +4,6 @@ require 'builder'
 describe 'Building Assemblyline Components' do
   context 'a simple component' do
     it 'works as expected' do
-      pending('Currently not working on travis CI') if ENV['TRAVIS']
       Builder.local_build(dir: 'spec/fixtures/components/simple_component', sha: 'thisisasha')
 
       expect(output(1).first).to eq " version:0.0.1\e[0m"
