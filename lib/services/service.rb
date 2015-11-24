@@ -12,12 +12,20 @@ module Services
 
     def start
       pull_image_if_required
-      self.container ||= Docker::Container.create('Image' => image, 'Cmd' => command)
+      self.container ||= Docker::Container.create(
+        'Image' => image,
+        'Cmd' => command,
+        'Env' => service_env.map { |var,val| "#{var}=#{val}" },
+      )
       Log.out.puts "starting #{service_name} service".bold.green
       container.start
     end
 
     def env
+      {}
+    end
+
+    def service_env
       {}
     end
 
