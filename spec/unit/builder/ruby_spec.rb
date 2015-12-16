@@ -8,14 +8,14 @@ describe Builder::Ruby do
 
   describe 'ruby version detection' do
     it 'reads the version from the .ruby-version file' do
-      expect(subject.send(:ruby_version)).to eq '2.2.1'
+      expect(subject.send(:ruby_version)).to eq '2.2.3'
     end
 
     context 'when a version is set in the Assemblyfile' do
-      let(:build) { { 'version' => '2.1.5' } }
+      let(:build) { { 'version' => '2.1.7' } }
 
       it 'wins' do
-        expect(subject.send(:ruby_version)).to eq '2.1.5'
+        expect(subject.send(:ruby_version)).to eq '2.1.7'
       end
     end
 
