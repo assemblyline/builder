@@ -8,8 +8,8 @@ before_script:
   - git config --global user.name "Your Name"
   - git config --global push.default simple
   - docker pull quay.io/assemblyline/ubuntu:14.04.2
-  - docker pull quay.io/assemblyline/ruby:2.1.5
-  - docker pull quay.io/assemblyline/ruby:2.2.1
+  - docker pull quay.io/assemblyline/ruby:2.1.7
+  - docker pull quay.io/assemblyline/ruby:2.2.3
   - docker pull postgres:9.4.1
 script:
   - bundle exec rake

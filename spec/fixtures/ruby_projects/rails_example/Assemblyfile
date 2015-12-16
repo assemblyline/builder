@@ -3,7 +3,7 @@ name = 'Example Rails App'
 
 [build]
 builder = 'ruby'
-version = '2.2.1'
+version = '2.2.3'
 
 [build.service.postgres]
 version = '9.4.1'
