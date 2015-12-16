@@ -32,7 +32,7 @@ describe Services::Postgres do
     it 'defaults to the latest postgres' do
       expect(Docker::Image).to receive(:get).with('postgres:latest')
       expect(Docker::Container).to receive(:create)
-        .with('Image' => 'postgres:latest', 'Cmd' => nil)
+        .with('Image' => 'postgres:latest', 'Cmd' => nil, 'Env' => [])
         .and_return(container)
       subject.start
     end
@@ -43,7 +43,7 @@ describe Services::Postgres do
       it 'uses the correct postgres version' do
         expect(Docker::Image).to receive(:get).with('postgres:9.4.1')
         expect(Docker::Container).to receive(:create)
-          .with('Image' => 'postgres:9.4.1', 'Cmd' => nil)
+          .with('Image' => 'postgres:9.4.1', 'Cmd' => nil, 'Env' => [])
           .and_return(container)
         subject.start
       end

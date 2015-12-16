@@ -26,11 +26,11 @@ module Services
     end
 
     def user
-      "conan"
+      'conan'
     end
 
     def password
-      "sekret"
+      'sekret'
     end
 
     def database_url
@@ -44,7 +44,7 @@ module Services
     end
 
     def create_database_with_retry
-      _out, _err, status = container.exec(['mysql', "--user=root", '-h', ip, '-e', "CREATE DATABASE #{database_name};"])
+      _out, _err, status = container.exec(['mysql', '--user=root', '-h', ip, '-e', "CREATE DATABASE #{database_name};"])
       return if status == 0
       Log.out.print '.'
       sleep 0.1

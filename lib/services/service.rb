@@ -15,7 +15,7 @@ module Services
       self.container ||= Docker::Container.create(
         'Image' => image,
         'Cmd' => command,
-        'Env' => service_env.map { |var,val| "#{var}=#{val}" },
+        'Env' => service_env.map { |var, val| "#{var}=#{val}" },
       )
       Log.out.puts "starting #{service_name} service".bold.green
       container.start
