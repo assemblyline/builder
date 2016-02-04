@@ -4,5 +4,5 @@ repo = 'quay.io/assemblyline/ruby_sample'
 
 [build]
 builder = 'ruby'
-version = '2.1.7'
+version = '2.1.8'
 script = ['bundle exec rspec']

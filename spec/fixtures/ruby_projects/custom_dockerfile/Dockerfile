@@ -1,2 +1,2 @@
-FROM quay.io/assemblyline/ruby:2.1.7
+FROM quay.io/assemblyline/ruby:2.1.8
 ENV CUSTOM_BUILD true
