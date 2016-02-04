@@ -1,8 +1,8 @@
-require 'simplecov'
-require 'codeclimate-test-reporter'
-require 'pry'
-require 'log'
-require 'excon'
+require "simplecov"
+require "codeclimate-test-reporter"
+require "pry"
+require "log"
+require "excon"
 Excon.defaults[:ssl_verify_peer] = false
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
@@ -11,7 +11,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 ]
 
 SimpleCov.start do
-  add_filter '/vendor/'
+  add_filter "/vendor/"
 end
 
 
@@ -30,17 +30,17 @@ module Log
   extend self
 
   def out
-    print '.'
+    print "."
     @out
   end
 
   def err
-    print '.'
+    print "."
     @err
   end
 
   def reset!
-    puts ''
+    puts ""
     @out = StringIO.new
     @err = StringIO.new
   end

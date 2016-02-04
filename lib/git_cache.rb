@@ -1,6 +1,6 @@
-require 'fileutils'
-require 'git_repo'
-require 'tmpdir'
+require "fileutils"
+require "git_repo"
+require "tmpdir"
 
 class GitCache
   def initialize(git_url)

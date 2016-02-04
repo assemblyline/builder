@@ -1,4 +1,4 @@
-require 'addressable/template'
+require "addressable/template"
 
 class GitUrl
   def initialize(url)
@@ -13,13 +13,13 @@ class GitUrl
   attr_reader :url
 
   def repo
-    parts['repo']
+    parts["repo"]
   end
 
   private
 
   def validate!
-    fail ArgumentError, 'repo url must be valid' unless parts
+    fail ArgumentError, "repo url must be valid" unless parts
   end
 
   def uri
@@ -27,11 +27,11 @@ class GitUrl
   end
 
   def host
-    parts['host']
+    parts["host"]
   end
 
   def org
-    parts['org']
+    parts["org"]
   end
 
 

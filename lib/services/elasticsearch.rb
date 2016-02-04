@@ -1,5 +1,5 @@
-require 'net/http'
-require 'services/service'
+require "net/http"
+require "services/service"
 
 module Services
   class Elasticsearch < Service
@@ -9,17 +9,17 @@ module Services
     end
 
     def env
-      { 'ES_URL' => es_url }
+      { "ES_URL" => es_url }
     end
 
     private
 
     def command
-      ['elasticsearch'] + properties
+      ["elasticsearch"] + properties
     end
 
     def properties
-      data.fetch('properties', []).map { |p| "-D#{p}" }
+      data.fetch("properties", []).map { |p| "-D#{p}" }
     end
 
     def es_url
@@ -28,7 +28,7 @@ module Services
 
     def wait
       uri = URI("http://#{es_url}")
-      sleep(0.1) until Net::HTTP.get_response(uri).code == '200'
+      sleep(0.1) until Net::HTTP.get_response(uri).code == "200"
     rescue Errno::ECONNREFUSED
       sleep 0.1
       retry

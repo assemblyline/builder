@@ -1,6 +1,6 @@
-require 'docker'
-require 'patch/tarwriter'
-require 'log'
+require "docker"
+require "patch/tarwriter"
+require "log"
 
 class Builder
   class Dockerfile
@@ -11,8 +11,8 @@ class Builder
 
     def build(opts = {})
       set_read_timeout
-      image = Docker::Image.build_from_dir(path, opts.merge('pull' => true)) { |chunk| format_build_status(chunk) }
-      image.tag('repo' => application.repo, 'tag' => application.tag, 'force' => true)
+      image = Docker::Image.build_from_dir(path, opts.merge("pull" => true)) { |chunk| format_build_status(chunk) }
+      image.tag("repo" => application.repo, "tag" => application.tag, "force" => true)
       image
     end
 
@@ -26,12 +26,12 @@ class Builder
 
     def format_build_status(chunk)
       json = JSON.parse(chunk)
-      if json['error']
-        Log.err.puts json['error']
+      if json["error"]
+        Log.err.puts json["error"]
         exit 1
       end
-      Log.out.puts json['stream'] if json['stream']
-      Log.out.puts json['status'] if json['status']
+      Log.out.puts json["stream"] if json["stream"]
+      Log.out.puts json["status"] if json["status"]
     end
   end
 end

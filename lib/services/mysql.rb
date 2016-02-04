@@ -1,6 +1,6 @@
-require 'services/service'
-require 'colorize'
-require 'log'
+require "services/service"
+require "colorize"
+require "log"
 
 module Services
   class Mysql < Service
@@ -10,7 +10,7 @@ module Services
     end
 
     def env
-      { 'DATABASE_URL' => database_url }
+      { "DATABASE_URL" => database_url }
     end
 
     protected
@@ -21,16 +21,16 @@ module Services
 
     def service_env
       {
-        'MYSQL_ALLOW_EMPTY_PASSWORD' => true,
+        "MYSQL_ALLOW_EMPTY_PASSWORD" => true,
       }
     end
 
     def user
-      'conan'
+      "conan"
     end
 
     def password
-      'sekret'
+      "sekret"
     end
 
     def database_url
@@ -44,15 +44,15 @@ module Services
     end
 
     def create_database_with_retry
-      _out, _err, status = container.exec(['mysql', '--user=root', '-h', ip, '-e', "CREATE DATABASE #{database_name};"])
+      _out, _err, status = container.exec(["mysql", "--user=root", "-h", ip, "-e", "CREATE DATABASE #{database_name};"])
       return if status == 0
-      Log.out.print '.'
+      Log.out.print "."
       sleep 0.1
       create_database_with_retry
     end
 
     def database_name
-      data['database_name'] || "#{application.name.downcase.split.join('_')}_test"
+      data["database_name"] || "#{application.name.downcase.split.join("_")}_test"
     end
   end
 end

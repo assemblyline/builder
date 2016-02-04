@@ -1,5 +1,5 @@
-require 'rspec/core'
-require 'specinfra/core'
+require "rspec/core"
+require "specinfra/core"
 
 class Builder
   class Component
@@ -30,7 +30,7 @@ class Builder
       end
 
       def spec_command
-        [File.join(path, 'spec')] + (versions - [version.tag]).map { |v| ['-t', "~#{v}"] }.flatten
+        [File.join(path, "spec")] + (versions - [version.tag]).map { |v| ["-t", "~#{v}"] }.flatten
       end
     end
   end

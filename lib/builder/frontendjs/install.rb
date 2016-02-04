@@ -1,4 +1,4 @@
-require 'dir_cache'
+require "dir_cache"
 
 class Builder
   class FrontendJS
@@ -27,9 +27,9 @@ class Builder
 
       def setup_caches
         self.caches = []
-        caches << cache_for('package.json', 'node_modules') if npm?
-        caches << cache_for('bower.json', 'bower_components') if bower?
-        caches << cache_for('config.js', 'jspm_packages') if jspm?
+        caches << cache_for("package.json", "node_modules") if npm?
+        caches << cache_for("bower.json", "bower_components") if bower?
+        caches << cache_for("config.js", "jspm_packages") if jspm?
       end
 
       def cache_for(config, dirname)
@@ -40,41 +40,41 @@ class Builder
       def jspm
         commands = []
         return commands unless jspm?
-        commands << "jspm config registries.github.auth #{ENV['JSPM_GITHUB_TOKEN']}" if ENV['JSPM_GITHUB_TOKEN']
-        commands << 'jspm install'
+        commands << "jspm config registries.github.auth #{ENV["JSPM_GITHUB_TOKEN"]}" if ENV["JSPM_GITHUB_TOKEN"]
+        commands << "jspm install"
         commands
       end
 
       def jspm?
-        return unless exist?('package.json')
-        package = JSON.load(File.read(File.join(path, 'package.json')))
+        return unless exist?("package.json")
+        package = JSON.load(File.read(File.join(path, "package.json")))
         return unless package
-        !package['jspm'].nil?
+        !package["jspm"].nil?
       end
 
       def npm
         return [] unless npm?
-        ['npm install']
+        ["npm install"]
       end
 
       def npm?
-        exist? 'package.json'
+        exist? "package.json"
       end
 
       def bower
         return [] unless bower?
-        ['bower update --allow-root']
+        ["bower update --allow-root"]
       end
 
       def bower?
-        exist? 'bower.json'
+        exist? "bower.json"
       end
 
       def versions
-        vers = ['node --version']
-        vers += ['npm --version'] if npm?
-        vers += ['jspm --version'] if jspm?
-        vers += ['bower --version'] if bower?
+        vers = ["node --version"]
+        vers += ["npm --version"] if npm?
+        vers += ["jspm --version"] if jspm?
+        vers += ["bower --version"] if bower?
         vers
       end
 

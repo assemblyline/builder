@@ -1,4 +1,4 @@
-require 'erb'
+require "erb"
 
 class Builder
   class Component

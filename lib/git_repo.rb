@@ -1,6 +1,6 @@
-require 'minigit'
-require 'securerandom'
-require 'log'
+require "minigit"
+require "securerandom"
+require "log"
 
 class GitRepo
 
@@ -23,7 +23,7 @@ class GitRepo
   def merge(ref)
     git.checkout({ b: working_branch }, ref)
     git.checkout :master
-    git.merge(working_branch, 'no-ff' => true, m: 'merge branch working copy')
+    git.merge(working_branch, "no-ff" => true, m: "merge branch working copy")
     git.branch(d: working_branch)
   end
 

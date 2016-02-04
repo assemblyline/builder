@@ -1,6 +1,6 @@
-require 'builder/dockerfile'
-require 'builder/component/spec_runner'
-require 'colorize'
+require "builder/dockerfile"
+require "builder/component/spec_runner"
+require "colorize"
 
 class Builder
   class Component
@@ -15,7 +15,7 @@ class Builder
         self.spec_runner = SpecRunner.new(
           path: component.path,
           version: self,
-          version_tags: versions.map { |version| version['version'] },
+          version_tags: versions.map { |version| version["version"] },
         )
       end
 
@@ -30,7 +30,7 @@ class Builder
       end
 
       def tag
-        data['version']
+        data["version"]
       end
 
       def repo
@@ -38,7 +38,7 @@ class Builder
       end
 
       def template
-        data['template']
+        data["template"]
       end
 
       protected

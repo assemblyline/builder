@@ -1,18 +1,18 @@
-require 'docker'
-require 'erb'
-require 'builder/dockerfile'
-require 'container_runner'
-require 'services'
+require "docker"
+require "erb"
+require "builder/dockerfile"
+require "container_runner"
+require "services"
 
 class Builder
   class Ruby
     def initialize(application:, build:)
       self.application = application
-      self.ruby_version = build['version'] || detect_ruby_version
-      self.ignore = build['ignore'] || []
-      self.script = build['script']
-      self.services = Services.build(application, build['service'])
-      self.env = build.fetch('env', {})
+      self.ruby_version = build["version"] || detect_ruby_version
+      self.ignore = build["ignore"] || []
+      self.script = build["script"]
+      self.services = Services.build(application, build["service"])
+      self.env = build.fetch("env", {})
     end
 
     def build
@@ -38,7 +38,7 @@ class Builder
 
     def env
       @env.merge(services.map(&:env).reduce({}, :merge))
-        .merge('CI' => ENV['CI'], 'CI_MASTER' => ENV['CI_MASTER'])
+        .merge("CI" => ENV["CI"], "CI_MASTER" => ENV["CI_MASTER"])
     end
 
     def exit_if_failed
@@ -47,7 +47,7 @@ class Builder
     end
 
     def exit_code
-      test_container.json['State']['ExitCode']
+      test_container.json["State"]["ExitCode"]
     end
 
     def run_script
@@ -62,7 +62,7 @@ class Builder
     end
 
     def script
-      @script || ['bundle exec rake']
+      @script || ["bundle exec rake"]
     end
 
     def dockerfile_build
@@ -71,8 +71,8 @@ class Builder
     end
 
     def write_config
-      write('Dockerfile', ERB.new(File.read(dockerfile_template)).result(binding))
-      write('.dockerignore', ignore.join("\n"))
+      write("Dockerfile", ERB.new(File.read(dockerfile_template)).result(binding))
+      write(".dockerignore", ignore.join("\n"))
     end
 
     def write(filename, content)
@@ -80,7 +80,7 @@ class Builder
     end
 
     def dockerfile_template
-      File.expand_path('../ruby/Dockerfile.erb', __FILE__)
+      File.expand_path("../ruby/Dockerfile.erb", __FILE__)
     end
 
     def path(file)
@@ -88,12 +88,12 @@ class Builder
     end
 
     def ignore
-      @ignore + ['.git', 'Dockerfile', 'Assemblyfile']
+      @ignore + [".git", "Dockerfile", "Assemblyfile"]
     end
 
     def detect_ruby_version
-      return 'latest' unless File.exist? path('.ruby-version')
-      File.read(path('.ruby-version')).chomp
+      return "latest" unless File.exist? path(".ruby-version")
+      File.read(path(".ruby-version")).chomp
     end
   end
 end

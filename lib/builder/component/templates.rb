@@ -1,4 +1,4 @@
-require 'builder/component/template'
+require "builder/component/template"
 
 class Builder
   class Component
@@ -27,18 +27,18 @@ class Builder
 
       def template_path(template_path)
         tp = template_path.dup
-        tp.slice!('/templates')
-        strip_version(tp.split('.erb').first)
+        tp.slice!("/templates")
+        strip_version(tp.split(".erb").first)
       end
 
       def template_for(candidates, tag)
         candidates.detect do |t|
-          t.split('/templates/').last.split('/').first == tag
+          t.split("/templates/").last.split("/").first == tag
         end
       end
 
       def grouped_templates
-        Dir[path + '/templates/**/**.erb'].group_by do |template|
+        Dir[path + "/templates/**/**.erb"].group_by do |template|
           strip_version(template)
         end
       end
@@ -46,8 +46,8 @@ class Builder
       def strip_version(template)
         t = template.dup
         versions.each do |v|
-          t.slice!('/' + v.tag)
-          t.slice!('/' + v.template) if v.template
+          t.slice!("/" + v.tag)
+          t.slice!("/" + v.template) if v.template
         end
         t
       end

@@ -1,13 +1,13 @@
-require 'services/service'
-require 'colorize'
-require 'log'
+require "services/service"
+require "colorize"
+require "log"
 
 module Services
   class RabbitMQ < Service
     def env
       {
-        'AMQP_URI' => amqp_uri,
-        'AMQP_URL' => amqp_uri,
+        "AMQP_URI" => amqp_uri,
+        "AMQP_URL" => amqp_uri,
       }
     end
 

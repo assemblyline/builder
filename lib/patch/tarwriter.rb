@@ -1,4 +1,4 @@
-require 'rubygems/package'
+require "rubygems/package"
 
 module Gem
   class Package

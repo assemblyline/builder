@@ -1,6 +1,6 @@
-require 'services/service'
-require 'colorize'
-require 'log'
+require "services/service"
+require "colorize"
+require "log"
 
 module Services
   class Postgres < Service
@@ -10,7 +10,7 @@ module Services
     end
 
     def env
-      { 'DATABASE_URL' => database_url }
+      { "DATABASE_URL" => database_url }
     end
 
     protected
@@ -30,15 +30,15 @@ module Services
     end
 
     def create_database_with_retry
-      _out, _err, status = container.exec(['psql', '-U', 'postgres', '-c', "CREATE DATABASE #{database_name};"])
+      _out, _err, status = container.exec(["psql", "-U", "postgres", "-c", "CREATE DATABASE #{database_name};"])
       return unless status == 2
-      Log.out.print '.'
+      Log.out.print "."
       sleep 0.1
       create_database_with_retry
     end
 
     def database_name
-      data['database_name'] || "#{application.name.downcase.split.join('_')}_test"
+      data["database_name"] || "#{application.name.downcase.split.join("_")}_test"
     end
   end
 end

@@ -1,8 +1,8 @@
-require 'fileutils'
-require 'digest/sha1'
-require 'tmpdir'
-require 'colorize'
-require 'log'
+require "fileutils"
+require "digest/sha1"
+require "tmpdir"
+require "colorize"
+require "log"
 
 class DirCache
   def initialize(path:, config:, dirname:)
@@ -47,7 +47,7 @@ class DirCache
   def cache_path
     File.join(
       Dir.tmpdir,
-      'assemblyline',
+      "assemblyline",
       "#{dirname}_cache",
       Digest::SHA1.hexdigest(File.read(File.join(path, config))),
     )

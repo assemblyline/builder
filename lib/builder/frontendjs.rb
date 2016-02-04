@@ -1,17 +1,17 @@
-require 'colorize'
-require 'docker'
-require 'builder/dockerfile'
-require 'builder/frontendjs/install'
-require 'container_runner'
+require "colorize"
+require "docker"
+require "builder/dockerfile"
+require "builder/frontendjs/install"
+require "container_runner"
 
 class Builder
   class FrontendJS
     def initialize(application:, build:)
       self.application = application
-      self.script = build['script']
-      self.install = build['install']
-      self.node_version = build['version'] || '0.12.0'
-      self.target = File.join(application.path, build['target'] || 'dist')
+      self.script = build["script"]
+      self.install = build["install"]
+      self.node_version = build["version"] || "0.12.0"
+      self.target = File.join(application.path, build["target"] || "dist")
     end
 
     def build
@@ -32,7 +32,7 @@ class Builder
       self.container = ContainerRunner.new(
         image: "quay.io/assemblyline/builder-frontendjs:#{node_version}",
         script: script,
-        env: { 'SSH_KEY' => ENV['SSH_KEY'] },
+        env: { "SSH_KEY" => ENV["SSH_KEY"] },
       )
     end
 
@@ -51,12 +51,12 @@ class Builder
     end
 
     def generate_dockerfile
-      write '.dockerignore', "Dockerfile\n.dockerignore"
-      write 'Dockerfile', "FROM nginx\nCOPY . /usr/share/nginx/html"
+      write ".dockerignore", "Dockerfile\n.dockerignore"
+      write "Dockerfile", "FROM nginx\nCOPY . /usr/share/nginx/html"
     end
 
     def write(name, content)
-      file = File.new(File.join(target, name), 'w')
+      file = File.new(File.join(target, name), "w")
       file.write content
       file.close
     end
@@ -67,11 +67,11 @@ class Builder
 
     def grunt
       return [] unless grunt?
-      ['grunt']
+      ["grunt"]
     end
 
     def grunt?
-      exist? 'Gruntfile.js'
+      exist? "Gruntfile.js"
     end
 
     def exist?(file)

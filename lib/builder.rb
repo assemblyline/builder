@@ -1,12 +1,12 @@
-require 'git_url'
-require 'git_cache'
-require 'tmpdir'
-require 'assemblyfile/loader'
+require "git_url"
+require "git_cache"
+require "tmpdir"
+require "assemblyfile/loader"
 
 class Builder
 
   def self.load_builder(application: application, build: build)
-    name = build['builder']
+    name = build["builder"]
     require "builder/#{name.downcase}"
     const_get(
       constants.detect { |c| c.to_s.downcase == name.downcase },
@@ -15,7 +15,7 @@ class Builder
 
   def self.local_build(dir: dir, sha:, push: false)
     Dir.mktmpdir do |tmpdir|
-      FileUtils.cp_r(dir + '/.', tmpdir, preserve: true)
+      FileUtils.cp_r(dir + "/.", tmpdir, preserve: true)
       Assemblyfile.load(tmpdir, sha).each do |application|
         Log.out.puts " Building #{application.name} ".black.on_yellow.underline.bold
         application.build

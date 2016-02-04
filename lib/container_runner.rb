@@ -1,5 +1,5 @@
-require 'docker'
-require 'log'
+require "docker"
+require "log"
 
 class ContainerRunner
   def initialize(image:, script:, env: {})
@@ -10,7 +10,7 @@ class ContainerRunner
 
   def run
     set_read_timeout
-    container.start('Binds' => ['/tmp:/tmp:rw'])
+    container.start("Binds" => ["/tmp:/tmp:rw"])
     attach
     exit_if_failed
     container.delete
@@ -24,19 +24,19 @@ class ContainerRunner
   private
 
   def command
-    ['bash', '-xce', script.map { |c| c + ' ;' }.join]
+    ["bash", "-xce", script.map { |c| c + " ;" }.join]
   end
 
   def env
-    @env.merge('PS4' => '$ ').map { |var, val| "#{var}=#{val}" }
+    @env.merge("PS4" => "$ ").map { |var, val| "#{var}=#{val}" }
   end
 
   def container
     @_container ||= Docker::Container.create(
-      'Cmd' => command,
-      'Image' => image,
-      'Volumes' => { '/tmp' => {} },
-      'Env' => env,
+      "Cmd" => command,
+      "Image" => image,
+      "Volumes" => { "/tmp" => {} },
+      "Env" => env,
     )
   end
 
@@ -59,7 +59,7 @@ class ContainerRunner
   end
 
   def exit_code
-    container.json['State']['ExitCode']
+    container.json["State"]["ExitCode"]
   end
 
   def set_read_timeout

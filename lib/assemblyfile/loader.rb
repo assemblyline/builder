@@ -1,4 +1,4 @@
-require 'toml'
+require "toml"
 
 module Assemblyfile
   extend self
@@ -13,11 +13,11 @@ module Assemblyfile
 
   def to_assembly(assemblyfile, dir, sha)
     data = get_data(assemblyfile)
-    if data['application']
-      require 'application'
+    if data["application"]
+      require "application"
       Application.new(data, dir, sha)
-    elsif data['component']
-      require 'component'
+    elsif data["component"]
+      require "component"
       Component.new(data, dir, sha)
     end
   end
@@ -27,6 +27,6 @@ module Assemblyfile
   end
 
   def assemblyfiles(dir)
-    Dir[dir + '/**/Assemblyfile*'].sort.map { |file| [file, File.dirname(file)] }
+    Dir[dir + "/**/Assemblyfile*"].sort.map { |file| [file, File.dirname(file)] }
   end
 end

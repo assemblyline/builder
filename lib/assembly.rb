@@ -1,8 +1,8 @@
-require 'docker'
-require 'json'
-require 'colorize'
-require 'builder'
-require 'log'
+require "docker"
+require "json"
+require "colorize"
+require "builder"
+require "log"
 
 class Assembly
   attr_reader :builder, :path, :name, :repo
@@ -14,7 +14,7 @@ class Assembly
 
   def push
     if @local_repo
-      Log.err.puts 'no repo specified in config only building project localy'
+      Log.err.puts "no repo specified in config only building project localy"
     else
       push_image
     end
@@ -39,7 +39,7 @@ class Assembly
   def push_image
     auth_docker
     images.each do |image|
-      Log.out.puts "pushing #{image.info['RepoTags'].first} =>".bold.green
+      Log.out.puts "pushing #{image.info["RepoTags"].first} =>".bold.green
       image.push { |chunk| format_push_status(chunk) }
     end
   end
@@ -47,25 +47,25 @@ class Assembly
   def auth_docker
     dockercfg.each do |index, config|
       Docker.authenticate!(
-        'email' => config['email'],
-        'username' => username(config['auth']),
-        'password' => password(config['auth']),
-        'serveraddress' => index,
+        "email" => config["email"],
+        "username" => username(config["auth"]),
+        "password" => password(config["auth"]),
+        "serveraddress" => index,
       )
     end
   end
 
   def format_push_status(chunk)
     json = JSON.parse(chunk)
-    output_error(json['error'])
-    output_status(json['status'])
+    output_error(json["error"])
+    output_status(json["status"])
   end
 
   def output_status(status)
     case status
-    when 'Pushing', 'Buffering to disk'
-      Log.out.print '.'
-    when 'Image successfully pushed'
+    when "Pushing", "Buffering to disk"
+      Log.out.print "."
+    when "Image successfully pushed"
       Log.out.puts "\n" + status
     else
       Log.out.puts status
@@ -87,18 +87,18 @@ class Assembly
   end
 
   def decode(auth)
-    Base64.decode64(auth).split(':')
+    Base64.decode64(auth).split(":")
   end
 
   def dockercfg
-    JSON.parse(ENV['DOCKERCFG'])
+    JSON.parse(ENV["DOCKERCFG"])
   end
 
   def timestamp
-    Time.now.strftime('%Y%m%d%H%M%S')
+    Time.now.strftime("%Y%m%d%H%M%S")
   end
 
   def local_repo
-    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/, '_')
+    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/, "_")
   end
 end

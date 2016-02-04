@@ -1,5 +1,5 @@
-require 'builder/component/version'
-require 'builder/component/templates'
+require "builder/component/version"
+require "builder/component/templates"
 
 class Builder
   class Component

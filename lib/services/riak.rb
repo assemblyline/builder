@@ -1,5 +1,5 @@
-require 'net/http'
-require 'services/service'
+require "net/http"
+require "services/service"
 
 module Services
   class Riak < Service
@@ -11,13 +11,13 @@ module Services
     end
 
     def env
-      { 'RIAK_NODES' => "#{ip}:8087" }
+      { "RIAK_NODES" => "#{ip}:8087" }
     end
 
     private
 
     def wait
-      sleep(0.1) until ping == '200'
+      sleep(0.1) until ping == "200"
     rescue Errno::ECONNREFUSED
       sleep 0.1
       retry
@@ -34,11 +34,11 @@ module Services
     end
 
     def create_bucket_types
-      return unless data['bucket_types']
-      data['bucket_types'].each do |bucket_type|
+      return unless data["bucket_types"]
+      data["bucket_types"].each do |bucket_type|
         Log.out.puts "creating riak bucket type: #{bucket_type}"
         %w(create activate).each do |action|
-          _out, _err, status = container.exec(['riak-admin', 'bucket-type', action, bucket_type])
+          _out, _err, status = container.exec(["riak-admin", "bucket-type", action, bucket_type])
           fail unless status == 0
         end
       end

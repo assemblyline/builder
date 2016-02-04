@@ -5,6 +5,6 @@ module Features
   # It is not really an issue as they can do as they wish to
   # clean up after us
   def kill?
-    !ENV['TRAVIS']
+    !ENV["TRAVIS"]
   end
 end
