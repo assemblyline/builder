@@ -1,4 +1,4 @@
-FROM quay.io/assemblyline/ruby:2.1.7
+FROM quay.io/assemblyline/ruby:2.1.8
 
 RUN ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts
 ENV GIT_SSH=/usr/src/bin/git_ssh
