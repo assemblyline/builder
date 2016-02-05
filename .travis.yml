@@ -9,10 +9,6 @@ before_script:
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
   - git config --global push.default simple
-  - docker pull quay.io/assemblyline/ubuntu:14.04.2
-  - docker pull quay.io/assemblyline/ruby:2.1.8
-  - docker pull quay.io/assemblyline/ruby:2.2.4
-  - docker pull postgres:9.4.1
 script:
   - bundle exec rake
 addons:
