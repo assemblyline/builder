@@ -13,13 +13,13 @@ class ContainerRunner
     set_read_timeout
     container.start("Binds" => ["/tmp:/tmp:rw"])
     attach
-    exit_if_failed
     container.delete
+    exit_if_failed
   end
 
   protected
 
-  attr_accessor :image, :script
+  attr_accessor :image, :script, :code
   attr_writer :env
 
   private
@@ -67,11 +67,12 @@ class ContainerRunner
         Log.err.print "#{stream}: #{chunk}"
       end
     end
+    self.code = exit_code
   end
 
   def exit_if_failed
-    return if exit_code == 0
-    exit exit_code
+    return if code == 0
+    exit code
   end
 
   def exit_code
