@@ -1,6 +1,5 @@
 require "docker"
 require "log"
-require "docker_uri"
 
 class ContainerRunner
   def initialize(image:, script:, env: {})
@@ -47,7 +46,6 @@ class ContainerRunner
   end
 
   def pull_image
-    uri = DockerURI.new(image)
     Docker::Image.create(
       "fromImage" => image
     ) do |*args|
