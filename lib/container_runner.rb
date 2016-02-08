@@ -1,5 +1,6 @@
 require "docker"
 require "log"
+require "docker_uri"
 
 class ContainerRunner
   def initialize(image:, script:, env: {})
@@ -37,6 +38,21 @@ class ContainerRunner
       "Image" => image,
       "Volumes" => { "/tmp" => {} },
       "Env" => env,
+    )
+  rescue Docker::Error::NotFoundError => e
+    raise e if @pulled
+    pull_image
+    @pulled = true
+    retry
+  end
+
+  def pull_image
+    uri = DockerURI.new(image)
+    DockerImage.create(
+      "fromImage" => uri.image,
+      "tag" => uri.tag,
+      "repo" => uri.repo,
+      "registry" => uri.registry,
     )
   end
 
