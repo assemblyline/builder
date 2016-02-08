@@ -4,8 +4,12 @@ sudo: required
 services:
   - docker
 before_install:
+  - sudo apt-get update
+  - sudo apt-cache policy docker-engine
+  - 'sudo apt-get install docker-engine=1.9.1-0~trusty -yq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"'
   - gem install bundler
 before_script:
+  - docker version
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
   - git config --global push.default simple
