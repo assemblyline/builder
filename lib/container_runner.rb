@@ -48,12 +48,11 @@ class ContainerRunner
 
   def pull_image
     uri = DockerURI.new(image)
-    DockerImage.create(
-      "fromImage" => uri.image,
-      "tag" => uri.tag,
-      "repo" => uri.repo,
-      "registry" => uri.registry,
-    )
+    Docker::Image.create(
+      "fromImage" => image
+    ) do |*args|
+      puts args.inspect
+    end
   end
 
   def attach
