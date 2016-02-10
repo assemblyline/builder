@@ -1,5 +1,6 @@
 require "docker"
 require "log"
+require "docker_stream_logger"
 
 class ContainerRunner
   def initialize(image:, script:, env: {})
@@ -46,10 +47,11 @@ class ContainerRunner
   end
 
   def pull_image
+    logger = DockerStreamLogger.new
     Docker::Image.create(
-      "fromImage" => image
-    ) do |*args|
-      puts args.inspect
+      "fromImage" => image,
+    ) do |stream|
+      logger.log(stream)
     end
   end
 

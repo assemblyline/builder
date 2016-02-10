@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path("../lib", File.dirname(__FILE__))
+
+require "docker_stream_logger"
+require "json"
+require "pry"
+require_relative "../spec/fixtures/docker_streams"
+
+puts Log.out.isatty
+
+module DockerStreamFixtures
+  [IMAGE_PULL, DOCKERFILE_PULL, DOCKERFILE_PULLED].each do |stream|
+    logger = DockerStreamLogger.new
+    stream.each do |chunk|
+      chunk = JSON.dump(chunk)
+      sleep 0.005
+      logger.log(chunk)
+    end
+
+    puts (1..80).map { "-" }.join
+    puts ""
+  end
+end

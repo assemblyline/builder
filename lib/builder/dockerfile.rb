@@ -1,12 +1,13 @@
 require "docker"
 require "patch/tarwriter"
-require "log"
+require "docker_stream_logger"
 
 class Builder
   class Dockerfile
     def initialize(application:, build: nil, path: nil) # rubocop:disable Lint/UnusedMethodArgument
       self.application = application
       self.path = path || application.path
+      self.log = DockerStreamLogger.new
     end
 
     def build(opts = {})
@@ -18,20 +19,14 @@ class Builder
 
     protected
 
-    attr_accessor :application, :path
+    attr_accessor :application, :path, :log
 
     def set_read_timeout
       Excon.defaults[:read_timeout] = 1000
     end
 
     def format_build_status(chunk)
-      json = JSON.parse(chunk)
-      if json["error"]
-        Log.err.puts json["error"]
-        exit 1
-      end
-      Log.out.puts json["stream"] if json["stream"]
-      Log.out.puts json["status"] if json["status"]
+      log.log(chunk)
     end
   end
 end

@@ -1,6 +1,7 @@
 require "docker"
 require "colorize"
 require "log"
+require "docker_stream_logger"
 
 module Services
   class Service
@@ -58,8 +59,10 @@ module Services
     def pull_image_if_required
       Docker::Image.get(image)
     rescue Docker::Error::NotFoundError
-      Log.out.puts "pulling #{service_name} version #{version}".bold.green
-      Docker::Image.create("fromImage" => image) { Log.out.print "." }
+      logger = DockerStreamLogger.new
+      Docker::Image.create("fromImage" => image) do |stream|
+        logger.log(stream)
+      end
     end
 
     def ip
