@@ -38,12 +38,12 @@ class DockerStreamLogger
     when /(Status:|Digest:) .*/
       Log.out.puts "#{chunk["status"]}".bold.green
     else
-      layers.process(chunk)
-      log_download
+      log_download(chunk)
     end
   end
 
-  def log_download
+  def log_download(chunk)
+    layers.process(chunk)
     return unless layers.total?
     return if progress_bar.finished?
     progress_bar.progress = layers.progress
@@ -54,7 +54,7 @@ class DockerStreamLogger
       title: "Downloading Image",
       total: layers.total,
       output: Log.out,
-      format: '%t |%w| %E',
+      format: "%t |%w| %E",
       length: 80,
     )
   end
