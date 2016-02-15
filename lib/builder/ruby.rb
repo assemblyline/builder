@@ -38,7 +38,11 @@ class Builder
 
     def env
       @env.merge(services.map(&:env).reduce({}, :merge))
-        .merge("CI" => ENV["CI"], "CI_MASTER" => ENV["CI_MASTER"])
+        .merge(ci_env)
+    end
+
+    def ci_env
+      { "CI" => ENV["CI"], "CI_MASTER" => ENV["CI_MASTER"] }.reject { |_, v| v.nil? }
     end
 
     def exit_if_failed
