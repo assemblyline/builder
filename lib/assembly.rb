@@ -91,7 +91,10 @@ class Assembly
   end
 
   def dockercfg
-    JSON.parse(ENV["DOCKERCFG"])
+    cfg = JSON.parse(ENV["DOCKERCFG"])
+    # in docker 1.7 ~/.dockercfg was replaced
+    # with ~/.docker/config.json, the format is *almost* identical
+    cfg["auths"] || cfg
   end
 
   def timestamp
