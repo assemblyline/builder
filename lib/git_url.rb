@@ -7,13 +7,17 @@ class GitUrl
   end
 
   def cache_path
-    "/tmp/assemblyline/git_cache/#{host}/#{org}/#{repo}.git"
+    "/tmp/assemblyline/git_cache/#{host}/#{repo}.git"
   end
 
   attr_reader :url
 
   def repo
-    parts["repo"]
+    "#{parts["org"]}/#{parts["repo"]}"
+  end
+
+  def github?
+    host == "github.com"
   end
 
   private
@@ -29,11 +33,6 @@ class GitUrl
   def host
     parts["host"]
   end
-
-  def org
-    parts["org"]
-  end
-
 
   def parts
     temp = nil

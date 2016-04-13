@@ -25,6 +25,7 @@ class Builder
   end
 
   def initialize(url:, branch: nil)
+    ENV["GIT_URL"] ||= url
     @url = GitUrl.new url
     @path = path
     @branch = branch
