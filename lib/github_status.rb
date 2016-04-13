@@ -26,7 +26,7 @@ module GithubStatus
   end
 
   def tests_complete(sha:)
-    status(status: "pending", sha: sha, context: "test",  description: "Tests passed")
+    status(status: "success", sha: sha, context: "test",  description: "Tests passed")
   end
 
   def pushing_image(sha:)
