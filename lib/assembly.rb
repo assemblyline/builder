@@ -11,8 +11,7 @@ class Assembly
   def build
     GithubStatus.start_build(sha: sha)
     self.images = [builder.build]
-    GithubStatus.tests_complete(sha: sha)
-    Log.out.puts "sucessfully assembled #{full_tag}".bold.green
+    tests_complete
   rescue => e
     GithubStatus.error(sha: sha)
     raise e
@@ -46,6 +45,11 @@ class Assembly
   attr_accessor :sha, :images
 
   private
+
+  def tests_complete
+    GithubStatus.tests_complete(sha: sha)
+    Log.out.puts "sucessfully assembled #{full_tag}".bold.green
+  end
 
   def push_image
     auth_docker
