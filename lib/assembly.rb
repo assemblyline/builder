@@ -3,21 +3,32 @@ require "json"
 require "colorize"
 require "builder"
 require "log"
+require "github_status"
 
 class Assembly
   attr_reader :builder, :path, :name, :repo
 
   def build
+    GithubStatus.start_build(sha: sha)
     self.images = [builder.build]
+    GithubStatus.tests_complete(sha: sha)
     Log.out.puts "sucessfully assembled #{full_tag}".bold.green
+  rescue => e
+    GithubStatus.error(sha: sha)
+    raise e
   end
 
   def push
     if @local_repo
       Log.err.puts "no repo specified in config only building project localy"
     else
+      GithubStatus.pushing_image(sha: sha)
       push_image
     end
+    GithubStatus.image_pushed(sha: sha, image_url: "https://#{full_tag}")
+  rescue => e
+    GithubStatus.push_error(sha: sha)
+    raise e
   end
 
   def full_tag
