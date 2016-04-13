@@ -14,6 +14,7 @@ before_script:
   - git config --global user.name "Your Name"
   - git config --global push.default simple
 script:
+  - docker build -t quay.io/assemblyline/builder:latest .
   - bundle exec rake
 addons:
   code_climate:
