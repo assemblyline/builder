@@ -1,5 +1,6 @@
 [application]
 name = 'simple_app'
+repo = 'quay.io/assemblyline/failing_rspec'
 
 [build]
 builder = 'ruby'

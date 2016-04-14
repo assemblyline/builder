@@ -19,14 +19,14 @@ describe "Building Ruby Apps" do
     it "can build the app" do
       Builder.local_build(dir: "spec/fixtures/ruby_projects/rails_example", sha: "thisisasha")
       expect(Log.out.string).to include "creating example_rails_app_test postgres database"
-      expect(Log.out.string).to include "sucessfully assembled example_rails_app:thisisasha"
+      expect(Log.out.string).to include "sucessfully assembled quay.io/assemblyline/example_rails_app:thisisasha_"
     end
   end
 
   context "with a custom dockerfile" do
     it "uses a custom dockerfile if present" do
       Builder.local_build(dir: "spec/fixtures/ruby_projects/custom_dockerfile", sha: "thisisasha")
-      expect(Log.out.string).to include "true"
+      expect(Log.out.string).to include "iamacustomddockerfile"
     end
   end
 end

@@ -7,6 +7,6 @@ class Application < Assembly
     self.name = data["application"]["name"]
     self.path = dir
     self.builder = Builder.load_builder(application: self, build: data["build"])
-    self.repo = data["application"]["repo"] || local_repo
+    self.repo = data["application"]["repo"]
   end
 end

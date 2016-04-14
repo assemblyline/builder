@@ -1,5 +1,6 @@
 [application]
 name = 'ruby with custom dockerfile'
+repo = 'quay.io/assemblyline/ruby_custom_dockerfile'
 
 [build]
 builder = 'ruby'
