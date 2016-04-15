@@ -31,7 +31,11 @@ module Services
 
     def stop
       Log.out.puts "stopping #{service_name} service".bold.green
-      container.delete(force: true)
+      if container
+        container.delete(force: true)
+      else
+        Log.err.puts "could not stop #{service_name} service, It may have never started".bold.red
+      end
     end
 
     protected
