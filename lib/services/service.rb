@@ -63,10 +63,18 @@ module Services
     def pull_image_if_required
       Docker::Image.get(image)
     rescue Docker::Error::NotFoundError
+      pull_image
+    end
+
+    def pull_image
       logger = DockerStreamLogger.new
       Docker::Image.create("fromImage" => service_name, "tag" => version) do |stream|
         logger.log(stream)
       end
+    rescue Docker::Error::NotFoundError => e
+      # docker seems to be throwing an error here, but the image gets
+      # pulled fine, I am just going to log it and move on with my life
+      Log.err.puts e.message
     end
 
     def ip
