@@ -18,12 +18,8 @@ class Assembly
   end
 
   def push
-    if @local_repo
-      Log.err.puts "no repo specified in config only building project localy"
-    else
-      GithubStatus.pushing_image(sha: sha)
-      push_image
-    end
+    GithubStatus.pushing_image(sha: sha)
+    push_image
     GithubStatus.image_pushed(sha: sha, image_url: "https://#{full_tag}")
   rescue => e
     GithubStatus.push_error(sha: sha)
@@ -41,8 +37,13 @@ class Assembly
 
   protected
 
-  attr_writer :builder, :path, :name, :repo
+  attr_writer :builder, :path, :name
   attr_accessor :sha, :images
+
+  def repo=(url)
+    fail "repo must be configured" unless url && !url.empty?
+    @repo = url
+  end
 
   private
 
@@ -114,9 +115,5 @@ class Assembly
 
   def timestamp
     Time.now.strftime("%Y%m%d%H%M%S")
-  end
-
-  def local_repo
-    @local_repo ||= name.downcase.gsub(/[^a-z0-9\-_.]/, "_")
   end
 end

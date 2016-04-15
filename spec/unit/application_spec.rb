@@ -24,6 +24,27 @@ describe Application do
 
   subject { described_class.new(data, dir, git_sha) }
 
+  describe "#initialize" do
+    it "can be initialized" do
+      subject
+    end
+
+    context "without a repo" do
+      let(:data) do
+        {
+          "application" => {
+            "name" => "The Worlds Best Webapp II",
+          },
+          "build" => { "builder" => "Dockerfile" },
+        }
+      end
+
+      it "fails" do
+        expect { subject }.to raise_error "repo must be configured"
+      end
+    end
+  end
+
 
   describe "#tag" do
     it "constructs the correct tag" do
@@ -78,22 +99,6 @@ describe Application do
       )
       expect(image).to receive(:push)
       subject.push
-    end
-
-    context "without a repo" do
-      let(:data) do
-        {
-          "application" => {
-            "name" => "The Worlds Best Webapp II",
-          },
-          "build" => { "builder" => "Dockerfile" },
-        }
-      end
-
-      it "does not push the local image" do
-        expect(subject.repo).to eq "the_worlds_best_webapp_ii"
-        subject.push
-      end
     end
   end
 end

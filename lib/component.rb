@@ -7,7 +7,7 @@ class Component < Assembly
     self.name = data["component"]["name"]
     self.path = dir
     self.builder = Builder::Component.new(component: self, versions: data["version"])
-    self.repo = data["component"].fetch("repo")
+    self.repo = data["component"]["repo"]
   end
 
   def build

@@ -31,7 +31,11 @@ module Services
 
     def stop
       Log.out.puts "stopping #{service_name} service".bold.green
-      container.delete(force: true)
+      if container
+        container.delete(force: true)
+      else
+        Log.err.puts "could not stop #{service_name} service, It may have never started".bold.red
+      end
     end
 
     protected
@@ -59,10 +63,18 @@ module Services
     def pull_image_if_required
       Docker::Image.get(image)
     rescue Docker::Error::NotFoundError
+      pull_image
+    end
+
+    def pull_image
       logger = DockerStreamLogger.new
-      Docker::Image.create("fromImage" => image) do |stream|
+      Docker::Image.create("fromImage" => service_name, "tag" => version) do |stream|
         logger.log(stream)
       end
+    rescue Docker::Error::NotFoundError => e
+      # docker seems to be throwing an error here, but the image gets
+      # pulled fine, I am just going to log it and move on with my life
+      Log.err.puts e.message
     end
 
     def ip

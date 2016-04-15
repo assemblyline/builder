@@ -1,9 +1,10 @@
 [application]
 name = 'Example Rails App'
+repo = 'quay.io/assemblyline/example_rails_app'
 
 [build]
 builder = 'ruby'
 version = '2.2.4'
 
 [build.service.postgres]
-version = '9.4.1'
+version = '9.4'
