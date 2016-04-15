@@ -23,7 +23,7 @@ describe Services::Postgres do
 
     it "pulls the image if it is not found" do
       allow(Docker::Image).to receive(:get).and_raise(Docker::Error::NotFoundError)
-      expect(Docker::Image).to receive(:create).with("fromImage" => "postgres:latest")
+      expect(Docker::Image).to receive(:create).with("fromImage" => "postgres", "tag" => "latest")
       subject.start
     end
   end
