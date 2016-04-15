@@ -7,4 +7,4 @@ builder = 'ruby'
 version = '2.2.4'
 
 [build.service.postgres]
-version = '9.4.1'
+version = '9.4'
