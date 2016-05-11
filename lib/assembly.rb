@@ -8,9 +8,10 @@ require "github_status"
 class Assembly
   attr_reader :builder, :path, :name, :repo
 
-  def build
+  def build(pushable)
+    auth_docker if pushable
     GithubStatus.start_build(sha: sha)
-    self.images = [builder.build]
+    self.images = [builder.build(pushable)]
     tests_complete
   rescue => e
     GithubStatus.error(sha: sha)
@@ -18,9 +19,9 @@ class Assembly
   end
 
   def push
+    auth_docker
     GithubStatus.pushing_image(sha: sha)
-    push_image
-    GithubStatus.image_pushed(sha: sha, image_url: "https://#{full_tag}")
+    push_images
   rescue => e
     GithubStatus.push_error(sha: sha)
     raise e
@@ -52,12 +53,19 @@ class Assembly
     Log.out.puts "sucessfully assembled #{full_tag}".bold.green
   end
 
-  def push_image
-    auth_docker
+  def push_images
     images.each do |image|
-      Log.out.puts "pushing #{image.info["RepoTags"].first} =>".bold.green
-      image.push { |chunk| format_push_status(chunk) }
+      push_image(image)
     end
+  end
+
+  def push_image(image)
+    image_tag = image.info["RepoTags"].first
+    Log.out.puts "pushing #{image_tag} =>".bold.green
+    image.info["RepoTags"].each do |repo_tag|
+      image.push(nil, repo_tag: repo_tag) { |chunk| format_push_status(chunk) }
+    end
+    GithubStatus.image_pushed(sha: sha, image_url: "https://#{image_tag}")
   end
 
   def auth_docker

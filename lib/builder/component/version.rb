@@ -49,7 +49,7 @@ class Builder
       private
 
       def dockerfile_build
-        self.image = Dockerfile.new(application: self, path: component.path).build
+        self.image = Dockerfile.new(application: self, path: component.path).build(false)
       end
 
       def write_config

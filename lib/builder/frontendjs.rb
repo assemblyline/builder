@@ -14,10 +14,10 @@ class Builder
       self.target = File.join(application.path, build["target"] || "dist")
     end
 
-    def build
+    def build(pushable = false)
       setup_build
       run_build
-      package_target
+      package_target(pushable)
     end
 
     protected
@@ -45,9 +45,9 @@ class Builder
       install.save_caches
     end
 
-    def package_target
+    def package_target(pushable)
       generate_dockerfile
-      Dockerfile.new(application: application, path: target).build
+      Dockerfile.new(application: application, path: target).build(pushable)
     end
 
     def generate_dockerfile
