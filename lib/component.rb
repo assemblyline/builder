@@ -10,7 +10,7 @@ class Component < Assembly
     self.repo = data["component"]["repo"]
   end
 
-  def build
+  def build(*)
     self.images = builder.build
   end
 

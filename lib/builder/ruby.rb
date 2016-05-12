@@ -15,8 +15,8 @@ class Builder
       self.env = build.fetch("env", {})
     end
 
-    def build
-      dockerfile_build
+    def build(pushable)
+      dockerfile_build(pushable)
       run_script
       image
     end
@@ -69,9 +69,9 @@ class Builder
       @script || ["bundle exec rake"]
     end
 
-    def dockerfile_build
+    def dockerfile_build(pushable)
       write_config
-      self.image = Dockerfile.new(application: application).build
+      self.image = Dockerfile.new(application: application).build(pushable)
     end
 
     def write_config

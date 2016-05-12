@@ -77,7 +77,7 @@ describe Application do
   describe "#build" do
     it "calls the builder" do
       expect(subject.builder).to receive(:build)
-      subject.build
+      subject.build(false)
     end
   end
 
@@ -87,7 +87,6 @@ describe Application do
     before do
       ENV["DOCKERCFG"] = "{\"https://index.docker.io/v1/\":{\"auth\":\"ZXJybTpwYXNzd29yZA\",\"email\":\"ed@reevoo.com\"}}" # rubocop:disable Metrics/LineLength
       allow(subject.builder).to receive(:build).and_return(image)
-      subject.build
     end
 
     it "pushes the tagged image to the repo" do
@@ -96,7 +95,8 @@ describe Application do
         "username" => "errm",
         "password" => "password",
         "serveraddress" => "https://index.docker.io/v1/",
-      )
+      ).twice
+      subject.build(true)
       expect(image).to receive(:push)
       subject.push
     end
