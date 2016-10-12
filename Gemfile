@@ -16,4 +16,5 @@ group :test do
   gem "codeclimate-test-reporter"
   gem "rake"
   gem "reevoocop"
+  gem "bundler-audit"
 end
