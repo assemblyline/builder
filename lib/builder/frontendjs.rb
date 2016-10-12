@@ -51,8 +51,7 @@ class Builder
     end
 
     def generate_dockerfile
-      write ".dockerignore", "Dockerfile\n.dockerignore"
-      write "Dockerfile", "FROM nginx\nCOPY . /usr/share/nginx/html"
+      write "Dockerfile", "FROM nginx\nCOPY . /usr/share/nginx/html\nRUN rm /usr/share/nginx/html/Dockerfile"
     end
 
     def write(name, content)
