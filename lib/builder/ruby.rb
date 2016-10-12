@@ -92,7 +92,7 @@ class Builder
     end
 
     def ignore
-      @ignore + [".git", "Dockerfile", "Assemblyfile"]
+      @ignore + [".git", "Assemblyfile"]
     end
 
     def detect_ruby_version
