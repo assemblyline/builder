@@ -38,7 +38,7 @@ module Services
     end
 
     def database_name
-      data["database_name"] || "#{application.name.downcase.split.join("_")}_test"
+      data["database_name"] || "#{application.name.downcase.split.join("_").tr("-","_")}_test"
     end
   end
 end
