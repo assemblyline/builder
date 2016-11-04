@@ -32,8 +32,16 @@ class Builder
       self.container = ContainerRunner.new(
         image: "quay.io/assemblyline/builder-frontendjs:#{node_version}",
         script: script,
-        env: { "SSH_KEY" => ENV["SSH_KEY"] },
+        env: env,
       )
+    end
+
+    def env
+      { "SSH_KEY" => ENV["SSH_KEY"] }.merge(ci_env)
+    end
+
+    def ci_env
+      { "CI" => ENV["CI"], "CI_MASTER" => ENV["CI_MASTER"] }.reject { |_, v| v.nil? }
     end
 
     def prepare_install
