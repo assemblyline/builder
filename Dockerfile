@@ -17,7 +17,7 @@ RUN apk add --no-cache \
     openssh-client \
   && ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts \
   && git config --global user.email "assemblyline@reevoo.com" && git config --global user.name "Assemblyline Build Worker" \
-  && bundle install -j4 -r3 \
+  && bundle install -j4 -r3 --without=test\
   && apk del --no-cache .builddeps
 
 ENV GIT_SSH=/usr/src/bin/git_ssh \
