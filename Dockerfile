@@ -20,6 +20,7 @@ RUN apk add --no-cache \
   && bundle install -j4 -r3 \
   && apk del --no-cache .builddeps
 
-ENV GIT_SSH=/usr/src/bin/git_ssh
+ENV GIT_SSH=/usr/src/bin/git_ssh \
+    RUBYOPT="-W0"
 
 ADD . ./
