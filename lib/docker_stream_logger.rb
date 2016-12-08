@@ -14,7 +14,7 @@ class DockerStreamLogger
     chunk = JSON.parse(chunk)
     log_status(chunk)
     log_out(chunk)
-    log_exit(chunk)
+    log_err(chunk)
   end
 
   private
@@ -24,10 +24,9 @@ class DockerStreamLogger
     Log.out.puts chunk["stream"]
   end
 
-  def log_exit(chunk)
+  def log_err(chunk)
     return unless chunk["error"]
     Log.err.puts chunk["error"]
-    exit 1
   end
 
   def log_status(chunk)

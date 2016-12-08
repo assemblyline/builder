@@ -60,9 +60,7 @@ describe DockerStreamLogger do
 
   context "Where there is an error" do
     it "logs to stdout and exits" do
-      expect do
-        stream_fixture([{ "error" => "stuff is broken" }])
-      end.to raise_error(SystemExit)
+      stream_fixture([{ "error" => "stuff is broken" }])
       expect(Log.err.string).to eq "stuff is broken\n"
     end
   end

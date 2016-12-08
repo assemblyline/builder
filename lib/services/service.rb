@@ -71,14 +71,12 @@ module Services
       Docker::Image.create("fromImage" => service_name, "tag" => version) do |stream|
         logger.log(stream)
       end
-    rescue Docker::Error::NotFoundError => e
-      # docker seems to be throwing an error here, but the image gets
-      # pulled fine, I am just going to log it and move on with my life
-      Log.err.puts e.message
+    rescue Docker::Error::NotFoundError
+      Docker::Image.get(image)
     end
 
     def ip
-      container.json["NetworkSettings"]["IPAddress"]
+      @ip ||= container.json["NetworkSettings"]["IPAddress"]
     end
   end
 end
