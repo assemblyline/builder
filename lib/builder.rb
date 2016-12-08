@@ -15,7 +15,7 @@ class Builder
 
   def self.local_build(dir: dir, sha:, push: false)
     Dir.mktmpdir do |tmpdir|
-      FileUtils.cp_r(dir + "/.", tmpdir, preserve: true)
+      FileUtils.cp_r(dir + "/.", tmpdir)
       Assemblyfile.load(tmpdir, sha).each do |application|
         Log.out.puts " Building #{application.name} ".black.on_yellow.underline.bold
         application.build(push)
