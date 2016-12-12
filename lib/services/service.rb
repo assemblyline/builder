@@ -71,8 +71,6 @@ module Services
       Docker::Image.create("fromImage" => image) do |stream|
         logger.log(stream)
       end
-    rescue Docker::Error::NotFoundError
-      Docker::Image.get(image)
     end
 
     def ip
