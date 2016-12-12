@@ -68,7 +68,7 @@ module Services
 
     def pull_image
       logger = DockerStreamLogger.new
-      Docker::Image.create("fromImage" => service_name, "tag" => version) do |stream|
+      Docker::Image.create("fromImage" => image) do |stream|
         logger.log(stream)
       end
     rescue Docker::Error::NotFoundError
