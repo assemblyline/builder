@@ -95,7 +95,7 @@ describe Application do
         "username" => "errm",
         "password" => "password",
         "serveraddress" => "https://index.docker.io/v1/",
-      ).twice
+      )
       subject.build(true)
       expect(image).to receive(:push)
       subject.push

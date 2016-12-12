@@ -9,7 +9,6 @@ class Assembly
   attr_reader :builder, :path, :name, :repo
 
   def build(pushable)
-    auth_docker if pushable
     GithubStatus.start_build(sha: sha)
     self.images = [builder.build(pushable)]
     tests_complete
