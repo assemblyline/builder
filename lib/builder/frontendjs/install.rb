@@ -11,7 +11,7 @@ class Builder
       end
 
       def script
-        versions + (@script || npm + jspm + bower)
+        versions + (@script || npm_packages + jspm + bower)
       end
 
       def save_caches
@@ -27,7 +27,7 @@ class Builder
 
       def setup_caches
         self.caches = []
-        caches << cache_for("package.json", "node_modules") if npm?
+        caches << cache_for("package.json", "node_modules") if npm? || yarn?
         caches << cache_for("bower.json", "bower_components") if bower?
         caches << cache_for("config.js", "jspm_packages") if jspm?
       end
@@ -52,13 +52,18 @@ class Builder
         !package["jspm"].nil?
       end
 
-      def npm
-        return [] unless npm?
-        ["npm install"]
+      def npm_packages
+        return ["yarn install"] if yarn?
+        return ["npm install"] if npm?
+        []
       end
 
       def npm?
         exist? "package.json"
+      end
+
+      def yarn?
+        npm? && exist?("yarn.lock")
       end
 
       def bower

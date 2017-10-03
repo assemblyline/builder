@@ -63,6 +63,35 @@ describe Builder::FrontendJS do
       end
     end
 
+    context "in an yarn project" do
+      let(:path) { "#{base_path}/yarn" }
+
+      it "runs yarn install" do
+        expect(ContainerRunner).to receive(:new) do |args|
+          expect(args[:script]).to include "yarn install"
+          runner
+        end
+        subject.build
+      end
+
+      it "primes the npm cache" do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        expect(DirCache).to receive(:new)
+          .with(path: path, config: "package.json", dirname: "node_modules")
+          .and_return(cache)
+        expect(cache).to receive(:prime)
+        subject.build
+      end
+
+      it "saves the npm cache" do
+        allow(ContainerRunner).to receive(:new).and_return(runner)
+        expect(DirCache).to receive(:new)
+          .and_return(cache)
+        expect(cache).to receive(:save)
+        subject.build
+      end
+    end
+
     context "in a bower project" do
       let(:path) { "#{base_path}/bower" }
 
